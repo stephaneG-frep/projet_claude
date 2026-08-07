@@ -1,0 +1,132 @@
+[
+  {
+    "id": "mission_01",
+    "number": 1,
+    "title": "Réveiller le processeur",
+    "narrative": "CORE-01, la machine virtuelle de The Forge, est en veille profonde. Son premier registre, RAX, doit recevoir une valeur pour que le cœur du système redémarre.",
+    "objective": "Placez la valeur 1 dans RAX.",
+    "starterCode": "; Réveillez CORE-01\n",
+    "hints": [
+      "Utilisez l'instruction MOV pour placer une valeur immédiate dans un registre.",
+      "La syntaxe est : MOV RAX, 1"
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 1, "description": "RAX doit valoir 1."}
+    ]
+  },
+  {
+    "id": "mission_02",
+    "number": 2,
+    "title": "Restaurer les registres",
+    "narrative": "Les six registres généraux de CORE-01 ont perdu leurs valeurs de calibration. Restaurez-les un par un pour que le système reconnaisse à nouveau son propre état.",
+    "objective": "Placez 1 dans RAX, 2 dans RBX, 3 dans RCX, 4 dans RDX, 5 dans RSI et 6 dans RDI.",
+    "starterCode": "; Restaurez les six registres généraux\n",
+    "hints": [
+      "Une ligne MOV par registre suffit.",
+      "L'ordre des instructions n'a pas d'importance ici."
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 1, "description": "RAX doit valoir 1."},
+      {"register": "RBX", "expectedValue": 2, "description": "RBX doit valoir 2."},
+      {"register": "RCX", "expectedValue": 3, "description": "RCX doit valoir 3."},
+      {"register": "RDX", "expectedValue": 4, "description": "RDX doit valoir 4."},
+      {"register": "RSI", "expectedValue": 5, "description": "RSI doit valoir 5."},
+      {"register": "RDI", "expectedValue": 6, "description": "RDI doit valoir 6."}
+    ]
+  },
+  {
+    "id": "mission_03",
+    "number": 3,
+    "title": "Réparer l'ALU",
+    "narrative": "L'unité de calcul de CORE-01 ne répond plus aux opérations complexes. Un test de calcul combiné doit être exécuté avec succès pour valider sa remise en service.",
+    "objective": "Calculez (8 + 4) × 2 et placez le résultat dans RAX (soit 24).",
+    "starterCode": "; Réparez l'ALU : calculez (8 + 4) x 2 dans RAX\n",
+    "hints": [
+      "Commencez par ADD pour obtenir 8 + 4.",
+      "Utilisez ensuite MUL avec un registre contenant 2."
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 24, "description": "RAX doit contenir le résultat 24."}
+    ]
+  },
+  {
+    "id": "mission_04",
+    "number": 4,
+    "title": "Débloquer une boucle infinie",
+    "narrative": "Un ancien processus de CORE-01 tourne en boucle sans jamais s'arrêter. Écrivez une boucle correcte, avec une véritable condition de sortie, pour montrer à CORE-01 comment se terminer proprement.",
+    "objective": "Calculez la somme des nombres de 1 à 5 dans RAX (résultat attendu : 15), en utilisant une boucle avec DEC et JNE.",
+    "starterCode": "MOV RAX, 0\nMOV RCX, 5\nboucle:\n; à compléter\n",
+    "hints": [
+      "Ajoutez RCX à RAX à chaque tour de boucle.",
+      "N'oubliez pas de décrémenter RCX puis de comparer avec CMP avant JNE.",
+      "Structure : ADD RAX, RCX / DEC RCX / CMP RCX, 0 / JNE boucle"
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 15, "description": "RAX doit valoir 15 (1+2+3+4+5)."}
+    ]
+  },
+  {
+    "id": "mission_05",
+    "number": 5,
+    "title": "Reconstruire la pile",
+    "narrative": "La pile de CORE-01 s'est effondrée après une coupure de courant. Empilez puis dépilez des valeurs pour prouver que le mécanisme LIFO fonctionne à nouveau normalement.",
+    "objective": "Empilez 10 puis 20, puis dépilez-les de façon à ce que RAX contienne 20 et RBX contienne 10.",
+    "starterCode": "; Reconstruisez la pile\n",
+    "hints": [
+      "PUSH 10 puis PUSH 20 empilent les deux valeurs.",
+      "Le premier POP récupère toujours la dernière valeur empilée.",
+      "POP ne fonctionne que vers un registre."
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 20, "description": "RAX doit valoir 20 (dépilé en premier)."},
+      {"register": "RBX", "expectedValue": 10, "description": "RBX doit valoir 10 (dépilé en second)."}
+    ]
+  },
+  {
+    "id": "mission_06",
+    "number": 6,
+    "title": "Retrouver une valeur perdue en mémoire",
+    "narrative": "Une valeur critique de configuration de CORE-01 a été égarée quelque part en mémoire. Écrivez-la à une adresse précise, puis retrouvez-la pour prouver qu'elle est bien accessible.",
+    "objective": "Écrivez la valeur 77 à l'adresse mémoire 0x40, puis relisez-la dans RAX.",
+    "starterCode": "; Retrouvez la valeur perdue\n",
+    "hints": [
+      "Une adresse mémoire s'écrit entre crochets : [0x40].",
+      "MOV [0x40], 77 écrit la valeur ; MOV RAX, [0x40] la relit."
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 77, "description": "RAX doit contenir 77, relu depuis la mémoire."}
+    ]
+  },
+  {
+    "id": "mission_07",
+    "number": 7,
+    "title": "Réparer un CALL/RET",
+    "narrative": "Le mécanisme d'appel de fonctions de CORE-01 est cassé : les fonctions ne reviennent plus jamais à leur point d'appel. Réparez un appel de fonction simple pour rétablir la confiance du système.",
+    "objective": "Appelez une fonction qui ajoute 10 à RAX, de façon à ce que RAX finisse à 15 en partant de 5.",
+    "starterCode": "MOV RAX, 5\nCALL ajouter_dix\nHLT\najouter_dix:\n; à compléter\n",
+    "hints": [
+      "Utilisez ADD RAX, 10 dans la fonction.",
+      "N'oubliez pas RET à la fin de la fonction, sinon l'exécution ne reviendra jamais après le CALL."
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 15, "description": "RAX doit valoir 15 après l'appel de fonction."}
+    ]
+  },
+  {
+    "id": "mission_08",
+    "number": 8,
+    "title": "Restaurer CORE-01",
+    "narrative": "Dernière étape : CORE-01 a besoin d'un programme complet combinant calcul, mémoire et fonction pour valider sa restauration complète et reprendre le contrôle de The Forge.",
+    "objective": "Calculez la factorielle de 4 (4×3×2×1 = 24) dans RAX à l'aide d'une boucle, puis stockez ce résultat à l'adresse mémoire 0x50.",
+    "starterCode": "MOV RAX, 1\nMOV RCX, 4\nboucle:\n; à compléter : multipliez RAX par RCX, puis décrémentez\n; puis stockez le résultat final en mémoire à 0x50\n",
+    "hints": [
+      "MUL RCX multiplie RAX par RCX à chaque tour.",
+      "N'oubliez pas DEC RCX puis CMP RCX, 0 avant le JNE.",
+      "Une fois la boucle terminée, utilisez MOV [0x50], RAX pour sauvegarder le résultat."
+    ],
+    "checks": [
+      {"register": "RAX", "expectedValue": 24, "description": "RAX doit contenir 24 (4!)."},
+      {"memoryAddress": 80, "expectedValue": 24, "description": "L'adresse 0x50 (80 en décimal) doit contenir 24."}
+    ]
+  }
+]

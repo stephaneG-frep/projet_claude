@@ -1,0 +1,233 @@
+[
+  {
+    "name": "MOV",
+    "category": "Transfert de données",
+    "syntax": "MOV destination, source",
+    "description": "Copie la valeur de la source vers la destination. La destination peut être un registre ou une adresse mémoire ; la source peut être un registre, une valeur immédiate, ou une adresse mémoire.",
+    "registersInvolved": ["Tous les registres généraux"],
+    "flagsAffected": [],
+    "example": "MOV RAX, 5\nMOV RBX, RAX\nMOV [0x10], RAX",
+    "commonMistakes": "Confondre le sens de la copie : MOV RAX, RBX copie RBX vers RAX, pas l'inverse. MOV ne modifie aucun flag.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "ADD",
+    "category": "Arithmétique",
+    "syntax": "ADD destination, source",
+    "description": "Additionne la source à la destination et stocke le résultat dans la destination.",
+    "registersInvolved": ["Registre destination"],
+    "flagsAffected": ["ZF", "CF", "SF", "OF"],
+    "example": "MOV RAX, 5\nMOV RBX, 3\nADD RAX, RBX   ; RAX = 8",
+    "commonMistakes": "Oublier que le résultat écrase la destination : la valeur d'origine de RAX est perdue après ADD RAX, RBX.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "SUB",
+    "category": "Arithmétique",
+    "syntax": "SUB destination, source",
+    "description": "Soustrait la source de la destination et stocke le résultat dans la destination.",
+    "registersInvolved": ["Registre destination"],
+    "flagsAffected": ["ZF", "CF", "SF", "OF"],
+    "example": "MOV RAX, 10\nSUB RAX, 3     ; RAX = 7",
+    "commonMistakes": "Inverser l'ordre : SUB RAX, RBX calcule RAX - RBX, pas RBX - RAX.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "INC",
+    "category": "Arithmétique",
+    "syntax": "INC registre",
+    "description": "Ajoute 1 au registre indiqué.",
+    "registersInvolved": ["Registre opérande"],
+    "flagsAffected": ["ZF", "SF", "OF"],
+    "example": "MOV RCX, 4\nINC RCX        ; RCX = 5",
+    "commonMistakes": "Croire que INC modifie CF : sur un vrai processeur x86 comme dans ASMForge, INC ne touche pas le flag de retenue CF, contrairement à ADD.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "DEC",
+    "category": "Arithmétique",
+    "syntax": "DEC registre",
+    "description": "Retire 1 au registre indiqué.",
+    "registersInvolved": ["Registre opérande"],
+    "flagsAffected": ["ZF", "SF", "OF"],
+    "example": "MOV RCX, 4\nDEC RCX        ; RCX = 3",
+    "commonMistakes": "Oublier la condition d'arrêt d'une boucle basée sur DEC : sans CMP après DEC, la boucle ne sait jamais quand s'arrêter.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "MUL",
+    "category": "Arithmétique",
+    "syntax": "MUL registre",
+    "description": "Multiplie RAX par le registre indiqué et stocke le résultat dans RAX.",
+    "registersInvolved": ["RAX"],
+    "flagsAffected": ["CF", "OF"],
+    "example": "MOV RAX, 6\nMOV RBX, 7\nMUL RBX        ; RAX = 42",
+    "commonMistakes": "Sur un vrai x86-64, MUL utilise la paire RDX:RAX pour les grands résultats. ASMForge simplifie ce comportement en ne conservant que le résultat dans RAX, et active CF/OF si le résultat aurait dépassé 64 bits.",
+    "architecture": "x86-64 (ASMForge, simplifié)"
+  },
+  {
+    "name": "DIV",
+    "category": "Arithmétique",
+    "syntax": "DIV registre",
+    "description": "Divise RAX par le registre indiqué : le quotient est stocké dans RAX, le reste dans RDX.",
+    "registersInvolved": ["RAX", "RDX"],
+    "flagsAffected": [],
+    "example": "MOV RAX, 17\nMOV RBX, 5\nDIV RBX        ; RAX = 3, RDX = 2",
+    "commonMistakes": "Diviser par un registre contenant 0 : ASMForge signale clairement cette erreur (« Division impossible : RBX contient 0. ») plutôt que de planter silencieusement.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "CMP",
+    "category": "Comparaison",
+    "syntax": "CMP opérande1, opérande2",
+    "description": "Compare deux valeurs en effectuant une soustraction interne (opérande1 - opérande2) sans en stocker le résultat, uniquement pour mettre à jour les flags.",
+    "registersInvolved": [],
+    "flagsAffected": ["ZF", "CF", "SF", "OF"],
+    "example": "MOV RAX, 5\nCMP RAX, 5     ; ZF activé (5 - 5 = 0)",
+    "commonMistakes": "Oublier CMP avant un saut conditionnel : sans lui, les flags reflètent encore le résultat d'une opération précédente, pas la comparaison voulue.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JMP",
+    "category": "Saut / branchement",
+    "syntax": "JMP étiquette",
+    "description": "Saute inconditionnellement vers l'étiquette indiquée.",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "JMP fin\nMOV RAX, 1     ; jamais exécuté\nfin:\nMOV RAX, 2",
+    "commonMistakes": "Sauter vers une étiquette inexistante : ASMForge le détecte dès l'analyse du programme, avant même l'exécution.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JE",
+    "category": "Saut / branchement",
+    "syntax": "JE étiquette",
+    "description": "Saute vers l'étiquette si ZF est activé (résultat de la dernière comparaison égal à zéro).",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "CMP RAX, 5\nJE egal",
+    "commonMistakes": "Utiliser JE sans CMP préalable dans la même intention logique.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JNE",
+    "category": "Saut / branchement",
+    "syntax": "JNE étiquette",
+    "description": "Saute vers l'étiquette si ZF est désactivé (les deux valeurs comparées sont différentes).",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "CMP RAX, 5\nJNE different",
+    "commonMistakes": "L'utiliser pour une boucle sans jamais faire évoluer la valeur comparée : la condition ne devient alors jamais vraie.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JG",
+    "category": "Saut / branchement",
+    "syntax": "JG étiquette",
+    "description": "Saute vers l'étiquette si l'opérande1 d'un CMP précédent est strictement supérieur à l'opérande2 (comparaison signée).",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "CMP RAX, RBX\nJG plus_grand",
+    "commonMistakes": "Confondre JG (supérieur strict, signé) avec une comparaison non signée.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JL",
+    "category": "Saut / branchement",
+    "syntax": "JL étiquette",
+    "description": "Saute vers l'étiquette si l'opérande1 d'un CMP précédent est strictement inférieur à l'opérande2 (comparaison signée).",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "CMP RAX, RBX\nJL plus_petit",
+    "commonMistakes": "Oublier que JL se base sur SF et OF, pas uniquement sur le signe du résultat brut.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JGE",
+    "category": "Saut / branchement",
+    "syntax": "JGE étiquette",
+    "description": "Saute vers l'étiquette si l'opérande1 est supérieur ou égal à l'opérande2 (comparaison signée).",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "CMP RAX, RBX\nJGE superieur_ou_egal",
+    "commonMistakes": "La confondre avec JG, qui exclut le cas d'égalité.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "JLE",
+    "category": "Saut / branchement",
+    "syntax": "JLE étiquette",
+    "description": "Saute vers l'étiquette si l'opérande1 est inférieur ou égal à l'opérande2 (comparaison signée).",
+    "registersInvolved": ["RIP (implicite)"],
+    "flagsAffected": [],
+    "example": "CMP RAX, RBX\nJLE inferieur_ou_egal",
+    "commonMistakes": "La confondre avec JL, qui exclut le cas d'égalité.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "PUSH",
+    "category": "Pile",
+    "syntax": "PUSH source",
+    "description": "Empile une valeur (registre ou immédiate) au sommet de la pile : RSP diminue de 8, puis la valeur est écrite à la nouvelle adresse de RSP.",
+    "registersInvolved": ["RSP"],
+    "flagsAffected": [],
+    "example": "MOV RAX, 42\nPUSH RAX",
+    "commonMistakes": "Empiler beaucoup de valeurs sans jamais les dépiler : la pile simulée d'ASMForge a une taille limitée et un débordement est signalé clairement.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "POP",
+    "category": "Pile",
+    "syntax": "POP destination",
+    "description": "Dépile la valeur au sommet de la pile dans le registre destination : RSP augmente de 8 après lecture.",
+    "registersInvolved": ["RSP"],
+    "flagsAffected": [],
+    "example": "PUSH RAX\nPOP RBX",
+    "commonMistakes": "Dépiler alors que la pile est vide : ASMForge signale explicitement cette erreur plutôt que de lire une valeur indéfinie.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "CALL",
+    "category": "Fonctions",
+    "syntax": "CALL étiquette",
+    "description": "Empile l'adresse de l'instruction suivante (adresse de retour), puis saute vers l'étiquette de la fonction appelée.",
+    "registersInvolved": ["RSP"],
+    "flagsAffected": [],
+    "example": "CALL ma_fonction\nHLT\nma_fonction:\nRET",
+    "commonMistakes": "Oublier le RET final de la fonction appelée : l'exécution ne revient alors jamais après le CALL.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "RET",
+    "category": "Fonctions",
+    "syntax": "RET",
+    "description": "Dépile l'adresse de retour empilée par le dernier CALL, et y fait sauter le processeur.",
+    "registersInvolved": ["RSP"],
+    "flagsAffected": [],
+    "example": "ma_fonction:\nADD RAX, 1\nRET",
+    "commonMistakes": "Utiliser RET sans CALL correspondant : la pile ne contient alors pas d'adresse de retour valide.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "NOP",
+    "category": "Contrôle",
+    "syntax": "NOP",
+    "description": "Ne fait littéralement rien : le processeur passe simplement à l'instruction suivante. Utile comme marqueur ou espace réservé.",
+    "registersInvolved": [],
+    "flagsAffected": [],
+    "example": "fin:\nNOP",
+    "commonMistakes": "Croire que NOP a un effet quelconque sur les registres ou les flags : ce n'est jamais le cas.",
+    "architecture": "x86-64 (ASMForge)"
+  },
+  {
+    "name": "HLT",
+    "category": "Contrôle",
+    "syntax": "HLT",
+    "description": "Arrête immédiatement l'exécution du programme.",
+    "registersInvolved": [],
+    "flagsAffected": [],
+    "example": "MOV RAX, 1\nHLT\nMOV RAX, 2   ; jamais exécuté",
+    "commonMistakes": "Placer du code utile après un HLT : il ne sera jamais exécuté.",
+    "architecture": "x86-64 (ASMForge)"
+  }
+]

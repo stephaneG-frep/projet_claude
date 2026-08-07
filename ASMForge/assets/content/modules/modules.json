@@ -1,0 +1,459 @@
+[
+  {
+    "id": "module_0",
+    "number": 0,
+    "title": "Avant l'assembleur",
+    "description": "Ce qu'est un ordinateur, avant même de parler de code.",
+    "lessons": [
+      {
+        "id": "m0_l1",
+        "order": 1,
+        "title": "Qu'est-ce qu'un ordinateur ?",
+        "blocks": [
+          {"type": "paragraph", "text": "Un ordinateur est une machine qui ne sait faire qu'une seule chose très vite : lire un nombre, faire un petit calcul dessus, et écrire un autre nombre. Tout ce que vous voyez à l'écran — un jeu, un traitement de texte, une application — n'est au fond qu'une succession gigantesque de ces petites opérations."},
+          {"type": "bullet", "text": "Le processeur (CPU) exécute les instructions, une par une, extrêmement vite."},
+          {"type": "bullet", "text": "La mémoire (RAM) stocke temporairement les données pendant que le programme tourne."},
+          {"type": "bullet", "text": "Le stockage (disque, SSD) garde les données même une fois l'ordinateur éteint."},
+          {"type": "tip", "text": "Dans ASMForge, vous allez apprendre à parler directement au processeur, avec le langage le plus proche du matériel qui reste lisible par un humain : l'assembleur."}
+        ]
+      },
+      {
+        "id": "m0_l2",
+        "order": 2,
+        "title": "CPU, RAM et stockage",
+        "blocks": [
+          {"type": "paragraph", "text": "Imaginez une cuisine. Le plan de travail, c'est la RAM : un espace rapide mais limité où vous posez les ingrédients que vous utilisez maintenant. Le garde-manger, c'est le disque dur : plus grand, mais plus lent à atteindre. Le cuisinier, c'est le CPU : il ne travaille que sur ce qui est posé sur le plan de travail."},
+          {"type": "bullet", "text": "RAM = mémoire vive, rapide, effacée à l'extinction."},
+          {"type": "bullet", "text": "Disque / SSD = stockage permanent, plus lent que la RAM."},
+          {"type": "bullet", "text": "CPU = ne manipule que ce qui est en RAM (ou dans ses propres registres)."},
+          {"type": "warning", "text": "Le CPU ne peut pas calculer directement sur le disque : les données doivent d'abord être chargées en mémoire."}
+        ]
+      },
+      {
+        "id": "m0_l3",
+        "order": 3,
+        "title": "Programme, instruction et langage machine",
+        "blocks": [
+          {"type": "paragraph", "text": "Un programme est une liste d'instructions. Chaque instruction est un ordre minuscule et précis : « copie ce nombre ici », « additionne ces deux valeurs », « si ce résultat est nul, saute à telle ligne »."},
+          {"type": "paragraph", "text": "Le processeur ne comprend en réalité que des nombres : le langage machine. Écrire directement en langage machine (des suites de 0 et de 1) serait illisible pour un humain."},
+          {"type": "code", "text": "Langage machine (extrait) :\n10111000 00000101 00000000 00000000 00000000"},
+          {"type": "tip", "text": "L'assembleur donne un nom lisible à chaque instruction machine : ce même octet devient MOV EAX, 5."}
+        ]
+      },
+      {
+        "id": "m0_l4",
+        "order": 4,
+        "title": "Assembleur, compilateur et linker",
+        "blocks": [
+          {"type": "paragraph", "text": "L'assembleur est la traduction la plus directe du langage machine en texte lisible : chaque ligne d'assembleur correspond (presque) à une seule instruction processeur."},
+          {"type": "bullet", "text": "Un compilateur (comme celui du C) transforme un langage de haut niveau en assembleur, puis en langage machine."},
+          {"type": "bullet", "text": "Un assembleur (l'outil, pas le langage) transforme le texte assembleur en code machine."},
+          {"type": "bullet", "text": "Un linker assemble plusieurs fichiers compilés en un seul programme exécutable."},
+          {"type": "tip", "text": "Dans ASMForge, le Laboratoire contient un interpréteur pédagogique : il lit votre assembleur et simule directement son exécution, sans production de code machine réel — ce qui reste sûr et instantané pour apprendre."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_1",
+    "number": 1,
+    "title": "Binaire et hexadécimal",
+    "description": "La façon dont un ordinateur représente les nombres.",
+    "lessons": [
+      {
+        "id": "m1_l1",
+        "order": 1,
+        "title": "Bits et octets",
+        "blocks": [
+          {"type": "paragraph", "text": "Un bit est la plus petite unité d'information : il vaut 0 ou 1. Un octet (byte) regroupe 8 bits, et peut donc représenter 256 valeurs différentes (de 0 à 255)."},
+          {"type": "bullet", "text": "1 bit = 0 ou 1"},
+          {"type": "bullet", "text": "1 octet = 8 bits = 256 valeurs possibles (0 à 255)"},
+          {"type": "bullet", "text": "Un registre 64 bits comme RAX regroupe 8 octets."}
+        ]
+      },
+      {
+        "id": "m1_l2",
+        "order": 2,
+        "title": "Le binaire",
+        "blocks": [
+          {"type": "paragraph", "text": "En binaire, chaque position de bit vaut une puissance de 2. Le nombre 5 en décimal s'écrit 101 en binaire : 1×4 + 0×2 + 1×1 = 5."},
+          {"type": "code", "text": "Décimal 13 =  1101 en binaire\n              8421  <- valeurs des positions\n              1101\n           8 + 4 + 0 + 1 = 13"},
+          {"type": "tip", "text": "Pour convertir un nombre en binaire, retirez la plus grande puissance de 2 possible, répétez jusqu'à zéro."}
+        ]
+      },
+      {
+        "id": "m1_l3",
+        "order": 3,
+        "title": "L'hexadécimal et les conversions",
+        "blocks": [
+          {"type": "paragraph", "text": "L'hexadécimal (base 16) utilise les chiffres 0-9 puis A-F. Il est très utilisé en assembleur car un octet complet tient sur exactement 2 chiffres hexadécimaux."},
+          {"type": "code", "text": "0x2A = 2×16 + 10 = 42 en décimal\n       (A vaut 10 en hexadécimal)"},
+          {"type": "bullet", "text": "En ASMForge, les valeurs hexadécimales s'écrivent avec le préfixe 0x, par exemple 0x1F."},
+          {"type": "tip", "text": "Le Memory Viewer du Laboratoire affiche justement les octets en HEX, DEC ou BIN au choix."}
+        ]
+      },
+      {
+        "id": "m1_l4",
+        "order": 4,
+        "title": "Nombres signés et complément à deux",
+        "blocks": [
+          {"type": "paragraph", "text": "Pour représenter des nombres négatifs, le processeur utilise le complément à deux : le bit le plus significatif indique le signe, et -1 s'écrit avec tous les bits à 1."},
+          {"type": "bullet", "text": "Sur 8 bits, 11111111 représente -1, pas 255, si le nombre est considéré comme signé."},
+          {"type": "bullet", "text": "C'est ce mécanisme qui permet à SUB et CMP de fonctionner avec de simples additions en interne."},
+          {"type": "warning", "text": "Le flag SF (Sign Flag) du processeur reflète justement le bit de signe du résultat d'une opération."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_2",
+    "number": 2,
+    "title": "Le processeur",
+    "description": "CPU, ALU, unité de contrôle et cycle d'exécution.",
+    "lessons": [
+      {
+        "id": "m2_l1",
+        "order": 1,
+        "title": "CPU, ALU et unité de contrôle",
+        "blocks": [
+          {"type": "paragraph", "text": "Le CPU se décompose en plusieurs blocs spécialisés. L'ALU (Arithmetic Logic Unit) fait les calculs (additions, comparaisons…). L'unité de contrôle (Control Unit) décide quelle instruction exécuter et pilote les autres composants."},
+          {"type": "bullet", "text": "ALU : additionne, soustrait, compare, effectue les opérations logiques."},
+          {"type": "bullet", "text": "Control Unit : lit l'instruction suivante et coordonne son exécution."},
+          {"type": "bullet", "text": "Registres : petites mémoires ultra-rapides internes au CPU (voir Module 3)."}
+        ]
+      },
+      {
+        "id": "m2_l2",
+        "order": 2,
+        "title": "Bus, horloge et Instruction Pointer",
+        "blocks": [
+          {"type": "paragraph", "text": "Le bus est le « chemin » électrique par lequel circulent les données entre le CPU et la mémoire. L'horloge cadence le rythme auquel le CPU exécute les instructions (en GHz, milliards de cycles par seconde)."},
+          {"type": "paragraph", "text": "Le registre RIP (Instruction Pointer) contient toujours l'adresse de la prochaine instruction à exécuter. Après chaque instruction, il avance — sauf lorsqu'un saut (JMP, CALL...) le modifie explicitement."},
+          {"type": "tip", "text": "Dans le Laboratoire, la ligne actuellement surlignée dans l'éditeur correspond exactement à ce que pointe RIP."}
+        ]
+      },
+      {
+        "id": "m2_l3",
+        "order": 3,
+        "title": "Le cycle Fetch / Decode / Execute",
+        "blocks": [
+          {"type": "paragraph", "text": "Chaque instruction traverse trois étapes, en boucle continue, des milliards de fois par seconde :"},
+          {"type": "bullet", "text": "Fetch : le CPU lit l'instruction à l'adresse pointée par RIP."},
+          {"type": "bullet", "text": "Decode : il détermine quelle opération est demandée et avec quels opérandes."},
+          {"type": "bullet", "text": "Execute : l'ALU (ou une autre unité) exécute réellement l'opération."},
+          {"type": "tip", "text": "Le mode Step du Laboratoire vous permet d'observer ce cycle instruction par instruction, avec le diagramme Registres → Bus → ALU → Mémoire qui s'anime à chaque pas."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_3",
+    "number": 3,
+    "title": "Registres",
+    "description": "Les petites mémoires ultra-rapides du processeur.",
+    "lessons": [
+      {
+        "id": "m3_l1",
+        "order": 1,
+        "title": "Les registres généraux",
+        "blocks": [
+          {"type": "paragraph", "text": "Les registres sont des emplacements de mémoire directement intégrés au processeur : ils sont des milliers de fois plus rapides d'accès que la RAM. ASMForge simule les six registres généraux de l'architecture x86-64 :"},
+          {"type": "bullet", "text": "RAX — registre accumulateur, souvent utilisé pour les résultats de calcul."},
+          {"type": "bullet", "text": "RBX — registre de base, historiquement utilisé pour des adresses."},
+          {"type": "bullet", "text": "RCX — registre compteur, souvent utilisé dans les boucles."},
+          {"type": "bullet", "text": "RDX — registre de données, complète RAX pour certaines opérations (comme DIV)."},
+          {"type": "bullet", "text": "RSI / RDI — registres source et destination, utilisés pour les opérations sur des blocs de données."},
+          {"type": "tip", "text": "Dans le Laboratoire, chaque registre modifié par la dernière instruction est mis en évidence en vert."}
+        ]
+      },
+      {
+        "id": "m3_l2",
+        "order": 2,
+        "title": "Les registres pointeurs : RSP, RBP, RIP",
+        "blocks": [
+          {"type": "paragraph", "text": "Trois registres ont un rôle spécial de « pointeur », c'est-à-dire qu'ils contiennent une adresse plutôt qu'une valeur ordinaire :"},
+          {"type": "bullet", "text": "RSP (Stack Pointer) — pointe vers le sommet de la pile (voir Module 9)."},
+          {"type": "bullet", "text": "RBP (Base Pointer) — sert de repère fixe dans la pile pendant l'exécution d'une fonction."},
+          {"type": "bullet", "text": "RIP (Instruction Pointer) — pointe vers la prochaine instruction à exécuter."},
+          {"type": "warning", "text": "Modifier RSP ou RBP « à la main » sans précaution peut corrompre la pile : ASMForge protège son propre RSP interne pour rester pédagogique et sûr."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_4",
+    "number": 4,
+    "title": "Premières instructions",
+    "description": "MOV, ADD, SUB, INC, DEC, MUL, DIV, NOP.",
+    "lessons": [
+      {
+        "id": "m4_l1",
+        "order": 1,
+        "title": "MOV : copier une valeur",
+        "blocks": [
+          {"type": "paragraph", "text": "MOV copie une valeur depuis sa source vers sa destination. La destination peut être un registre ou un emplacement mémoire ; la source peut être un registre, une valeur immédiate, ou un emplacement mémoire."},
+          {"type": "code", "text": "MOV RAX, 5      ; RAX reçoit la valeur 5\nMOV RBX, RAX     ; RBX reçoit la valeur de RAX"},
+          {"type": "warning", "text": "Erreur fréquente : croire que MOV RAX, RBX modifie RBX. C'est l'inverse : la valeur circule de la droite vers la gauche."}
+        ]
+      },
+      {
+        "id": "m4_l2",
+        "order": 2,
+        "title": "ADD et SUB",
+        "blocks": [
+          {"type": "paragraph", "text": "ADD additionne sa source à sa destination et stocke le résultat dans la destination. SUB fait de même avec une soustraction."},
+          {"type": "code", "text": "MOV RAX, 5\nMOV RBX, 3\nADD RAX, RBX     ; RAX vaut maintenant 8"},
+          {"type": "tip", "text": "Ces deux instructions mettent aussi à jour les flags ZF, SF, CF et OF en fonction du résultat (voir Module 5)."}
+        ]
+      },
+      {
+        "id": "m4_l3",
+        "order": 3,
+        "title": "INC, DEC et NOP",
+        "blocks": [
+          {"type": "paragraph", "text": "INC ajoute 1 à un registre, DEC lui retire 1. Elles sont très utilisées comme compteurs de boucle. NOP (« No Operation ») ne fait littéralement rien : elle sert de marqueur ou d'espace réservé."},
+          {"type": "code", "text": "MOV RCX, 3\nDEC RCX          ; RCX vaut 2\nDEC RCX          ; RCX vaut 1"},
+          {"type": "warning", "text": "Piège fréquent : contrairement à ADD/SUB, INC et DEC ne modifient pas le flag CF (retenue) — un détail hérité du matériel x86 réel."}
+        ]
+      },
+      {
+        "id": "m4_l4",
+        "order": 4,
+        "title": "MUL et DIV",
+        "blocks": [
+          {"type": "paragraph", "text": "MUL multiplie RAX par son opérande et stocke le résultat dans RAX. DIV divise RAX par son opérande : le quotient va dans RAX, le reste dans RDX."},
+          {"type": "code", "text": "MOV RAX, 6\nMOV RBX, 7\nMUL RBX          ; RAX vaut 42\n\nMOV RAX, 17\nMOV RBX, 5\nDIV RBX          ; RAX vaut 3 (quotient), RDX vaut 2 (reste)"},
+          {"type": "warning", "text": "Diviser par un registre qui contient 0 est une erreur d'exécution : ASMForge vous l'indique clairement plutôt que de planter silencieusement."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_5",
+    "number": 5,
+    "title": "Flags",
+    "description": "ZF, CF, SF, OF : la mémoire des derniers calculs du processeur.",
+    "lessons": [
+      {
+        "id": "m5_l1",
+        "order": 1,
+        "title": "ZF, CF, SF, OF",
+        "blocks": [
+          {"type": "paragraph", "text": "Après chaque opération arithmétique, le processeur met à jour un petit ensemble de drapeaux (flags) qui résument le résultat, sans avoir à le relire en entier."},
+          {"type": "bullet", "text": "ZF (Zero Flag) : activé si le résultat vaut exactement 0."},
+          {"type": "bullet", "text": "CF (Carry Flag) : activé s'il y a eu une retenue (addition) ou un emprunt (soustraction) au-delà de la capacité du registre."},
+          {"type": "bullet", "text": "SF (Sign Flag) : reflète le bit de signe du résultat (activé si le résultat est négatif)."},
+          {"type": "bullet", "text": "OF (Overflow Flag) : activé si un dépassement de capacité signée s'est produit."},
+          {"type": "code", "text": "MOV RAX, 5\nSUB RAX, 5       ; RAX vaut 0 → ZF est activé"},
+          {"type": "tip", "text": "Le panneau Flags du Laboratoire affiche l'état de chacun avec un symbole plein/vide et son nom complet, jamais seulement une couleur."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_6",
+    "number": 6,
+    "title": "Comparaisons",
+    "description": "CMP, JMP et les sauts conditionnels.",
+    "lessons": [
+      {
+        "id": "m6_l1",
+        "order": 1,
+        "title": "CMP : comparer sans modifier",
+        "blocks": [
+          {"type": "paragraph", "text": "CMP fonctionne comme SUB, mais sans stocker le résultat : elle sert uniquement à mettre à jour les flags, pour qu'une instruction de saut conditionnel puisse ensuite décider quoi faire."},
+          {"type": "code", "text": "MOV RAX, 5\nCMP RAX, 5       ; ZF est activé (5 - 5 = 0), RAX reste 5"}
+        ]
+      },
+      {
+        "id": "m6_l2",
+        "order": 2,
+        "title": "JMP et les sauts conditionnels",
+        "blocks": [
+          {"type": "paragraph", "text": "JMP saute inconditionnellement vers une étiquette. Les sauts conditionnels (JE, JNE, JG, JL, JGE, JLE) ne sautent que si les flags correspondent à la condition testée par le CMP précédent."},
+          {"type": "bullet", "text": "JE (Jump if Equal) : saute si ZF est activé."},
+          {"type": "bullet", "text": "JNE (Jump if Not Equal) : saute si ZF est désactivé."},
+          {"type": "bullet", "text": "JG / JL / JGE / JLE : sautent selon une comparaison « plus grand », « plus petit », etc., en tenant compte de SF et OF."},
+          {"type": "code", "text": "MOV RAX, 5\nCMP RAX, 3\nJG plus_grand\nMOV RBX, 0\nJMP fin\nplus_grand:\nMOV RBX, 1\nfin:\nNOP"}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_7",
+    "number": 7,
+    "title": "Boucles",
+    "description": "Compteurs, boucles et conditions de sortie.",
+    "lessons": [
+      {
+        "id": "m7_l1",
+        "order": 1,
+        "title": "Construire une boucle",
+        "blocks": [
+          {"type": "paragraph", "text": "Une boucle assembleur combine trois ingrédients : un compteur, une étiquette de retour, et une comparaison qui décide quand s'arrêter."},
+          {"type": "code", "text": "MOV RCX, 5       ; compteur\nMOV RAX, 0       ; accumulateur\nboucle:\nADD RAX, 1\nDEC RCX\nCMP RCX, 0\nJNE boucle       ; répète tant que RCX != 0\n; RAX vaut 5 à la fin"},
+          {"type": "warning", "text": "Une condition de sortie mal écrite (par exemple oublier DEC RCX) provoque une boucle infinie. ASMForge interrompt automatiquement l'exécution après un grand nombre d'instructions pour éviter de bloquer l'application."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_8",
+    "number": 8,
+    "title": "Mémoire",
+    "description": "Adresses, pointeurs, tableaux et endianness.",
+    "lessons": [
+      {
+        "id": "m8_l1",
+        "order": 1,
+        "title": "Adresses et contenu",
+        "blocks": [
+          {"type": "paragraph", "text": "La mémoire est une longue rangée de cases, chacune ayant une adresse (sa position) et un contenu (la valeur qui y est stockée). ASMForge simule 4096 octets, adressés de 0x0000 à 0x0FFF."},
+          {"type": "code", "text": "MOV [0x10], 42   ; écrit 42 à l'adresse 0x10\nMOV RAX, [0x10]  ; RAX reçoit 42"},
+          {"type": "tip", "text": "Le Memory Viewer du Laboratoire affiche une fenêtre de 16 adresses autour du dernier accès mémoire."}
+        ]
+      },
+      {
+        "id": "m8_l2",
+        "order": 2,
+        "title": "Pointeurs, offsets et tableaux",
+        "blocks": [
+          {"type": "paragraph", "text": "Un pointeur est simplement une valeur qui représente une adresse. On peut y ajouter un décalage (offset) pour accéder à des éléments voisins — c'est le principe de base d'un tableau."},
+          {"type": "code", "text": "MOV RBP, 100\nMOV [RBP-8], 7   ; écrit 7 à l'adresse 92\nMOV RAX, [RBP-8] ; RAX reçoit 7"},
+          {"type": "paragraph", "text": "L'endianness décrit l'ordre dans lequel les octets d'une valeur multi-octets sont rangés en mémoire. ASMForge, comme x86-64, utilise le format little-endian : l'octet de poids faible est stocké à l'adresse la plus basse."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_9",
+    "number": 9,
+    "title": "La pile",
+    "description": "PUSH, POP, RSP et RBP.",
+    "lessons": [
+      {
+        "id": "m9_l1",
+        "order": 1,
+        "title": "PUSH et POP",
+        "blocks": [
+          {"type": "paragraph", "text": "La pile (stack) est une zone de mémoire spéciale qui fonctionne comme une pile d'assiettes : on ne peut ajouter ou retirer qu'au sommet. PUSH empile une valeur, POP la retire."},
+          {"type": "code", "text": "MOV RAX, 42\nPUSH RAX         ; empile 42, RSP diminue de 8\nMOV RAX, 0\nPOP RBX          ; RBX reçoit 42, RSP augmente de 8"},
+          {"type": "tip", "text": "Le Stack Viewer du Laboratoire montre RSP → pointant toujours vers la valeur la plus récemment empilée."}
+        ]
+      },
+      {
+        "id": "m9_l2",
+        "order": 2,
+        "title": "RSP, RBP et les stack frames",
+        "blocks": [
+          {"type": "paragraph", "text": "Pendant l'exécution d'une fonction, RBP sert souvent de point de repère fixe (la « base » de la fonction), pendant que RSP continue de bouger à chaque PUSH/POP. Cette zone entre RBP et RSP s'appelle la stack frame de la fonction."},
+          {"type": "warning", "text": "Dépiler plus de valeurs qu'il n'en a été empilé est une erreur : ASMForge la signale explicitement plutôt que de lire une mémoire non définie."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_10",
+    "number": 10,
+    "title": "Fonctions",
+    "description": "CALL, RET et les conventions d'appel.",
+    "lessons": [
+      {
+        "id": "m10_l1",
+        "order": 1,
+        "title": "CALL et RET",
+        "blocks": [
+          {"type": "paragraph", "text": "CALL saute vers une fonction tout en empilant automatiquement l'adresse de retour. RET dépile cette adresse et y retourne : c'est ce mécanisme qui permet de revenir exactement là où l'appel a eu lieu."},
+          {"type": "code", "text": "MOV RAX, 1\nCALL double_it\nHLT\ndouble_it:\nADD RAX, RAX\nRET              ; retourne juste après CALL"}
+        ]
+      },
+      {
+        "id": "m10_l2",
+        "order": 2,
+        "title": "Paramètres et conventions d'appel",
+        "blocks": [
+          {"type": "paragraph", "text": "Dans du code assembleur réel, les paramètres d'une fonction sont transmis via des registres précis ou via la pile, selon une convention d'appel (par exemple RDI, RSI, RDX pour les trois premiers arguments en System V x86-64)."},
+          {"type": "paragraph", "text": "Une fonction bien écrite sauvegarde (PUSH) les registres qu'elle modifie et qui ne lui appartiennent pas, puis les restaure (POP) avant de faire RET — afin de ne pas perturber la fonction appelante."},
+          {"type": "tip", "text": "ASMForge simplifie volontairement ce mécanisme pour rester pédagogique : les registres de paramètres ne sont pas imposés, laissant expérimenter librement avec CALL/RET, PUSH/POP."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_11",
+    "number": 11,
+    "title": "NASM et Linux",
+    "description": "Structure d'un vrai programme NASM (introduction).",
+    "lessons": [
+      {
+        "id": "m11_l1",
+        "order": 1,
+        "title": "Structure d'un programme NASM",
+        "blocks": [
+          {"type": "paragraph", "text": "Un vrai fichier assembleur NASM sur Linux est organisé en sections : .data pour les données initialisées, .bss pour les données non initialisées, .text pour le code, avec un point d'entrée marqué global _start."},
+          {"type": "code", "text": "section .data\nmessage db \"Bonjour\", 0\n\nsection .text\nglobal _start\n_start:\nMOV RAX, 60      ; appel système exit\nMOV RDI, 0\nSYSCALL"},
+          {"type": "warning", "text": "Limitation pédagogique importante : ASMForge est un interpréteur isolé qui ne produit pas de vrai binaire et n'exécute aucun appel système réel (SYSCALL n'est pas simulé). Cette leçon présente la structure NASM à titre de culture générale ; le Laboratoire se concentre sur le sous-ensemble d'instructions exécutables listées dans la Référence."},
+          {"type": "tip", "text": "Pour assembler et exécuter réellement ce type de programme sur une machine Linux, on utiliserait les outils `nasm` puis `ld`, en dehors d'ASMForge."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_12",
+    "number": 12,
+    "title": "C et assembleur",
+    "description": "Comment un langage de haut niveau devient de l'assembleur.",
+    "lessons": [
+      {
+        "id": "m12_l1",
+        "order": 1,
+        "title": "De C à l'assembleur",
+        "blocks": [
+          {"type": "paragraph", "text": "Un compilateur C transforme votre code source en assembleur, puis en langage machine. Une simple addition en C se retrouve avec une structure très proche de ce que vous avez appris dans ASMForge."},
+          {"type": "code", "text": "// En C :\nint a = 5;\nint b = 3;\nint c = a + b;\n\n; Équivalent conceptuel en assembleur :\nMOV RAX, 5\nMOV RBX, 3\nADD RAX, RBX     ; RAX contient c"},
+          {"type": "tip", "text": "Les boucles for/while en C se compilent en une structure CMP + Jcc très proche de celle du Module 7."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_13",
+    "number": 13,
+    "title": "ARM64",
+    "description": "Introduction pédagogique à l'architecture ARM64.",
+    "lessons": [
+      {
+        "id": "m13_l1",
+        "order": 1,
+        "title": "Introduction à ARM64",
+        "blocks": [
+          {"type": "paragraph", "text": "ARM64 (AArch64) est l'architecture des smartphones, des Mac Apple Silicon et de nombreux serveurs. Contrairement à x86-64, c'est une architecture RISC (Reduced Instruction Set Computer) : ses instructions sont plus simples et plus uniformes."},
+          {"type": "bullet", "text": "Registres généraux nommés X0 à X30 (au lieu de RAX, RBX…)."},
+          {"type": "bullet", "text": "Les instructions arithmétiques ne peuvent pas lire directement la mémoire : il faut d'abord charger une valeur avec LDR, puis la traiter, puis la ranger avec STR."},
+          {"type": "code", "text": "; Équivalent conceptuel ARM64 de MOV RAX, 5 / ADD RAX, RBX :\nMOV X0, #5\nADD X0, X0, X1"},
+          {"type": "warning", "text": "Limitation pédagogique : le simulateur d'ASMForge n'exécute que le sous-ensemble x86-64 présenté dans la Référence. Cette leçon reste une introduction comparative, pas un second simulateur."}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "module_14",
+    "number": 14,
+    "title": "RISC-V",
+    "description": "Introduction pédagogique à l'architecture RISC-V.",
+    "lessons": [
+      {
+        "id": "m14_l1",
+        "order": 1,
+        "title": "Introduction à RISC-V",
+        "blocks": [
+          {"type": "paragraph", "text": "RISC-V est une architecture ouverte (libre de droits), de plus en plus utilisée dans l'embarqué et la recherche. Comme ARM64, c'est une architecture RISC : peu d'instructions, très régulières."},
+          {"type": "bullet", "text": "Registres nommés x0 à x31 (x0 est câblé à la valeur 0 en permanence)."},
+          {"type": "bullet", "text": "Instructions typiques : ADD, SUB, ADDI (addition avec une valeur immédiate), BEQ (branchement si égal)."},
+          {"type": "code", "text": "; Équivalent conceptuel RISC-V de MOV RAX, 5 / ADD RAX, RBX :\naddi x1, x0, 5\nadd  x1, x1, x2"},
+          {"type": "paragraph", "text": "Comparé à x86-64 (CISC, instructions denses et variées) et ARM64 (RISC mobile), RISC-V mise sur une spécification minimale et extensible, pensée pour être implémentée aussi bien sur un micro-contrôleur que sur un serveur."}
+        ]
+      }
+    ]
+  }
+]

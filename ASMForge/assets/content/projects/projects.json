@@ -1,0 +1,176 @@
+[
+  {
+    "id": "project_01",
+    "number": 1,
+    "title": "Additionneur",
+    "objective": "Écrire un programme qui additionne deux nombres et place le résultat dans RAX.",
+    "explanation": "Ce premier mini-projet reprend les toutes premières notions vues dans le Module 4 : charger deux valeurs dans des registres, puis les additionner.",
+    "steps": [
+      "Placez le premier nombre (15) dans RAX.",
+      "Placez le second nombre (27) dans un autre registre.",
+      "Additionnez-les avec ADD.",
+      "Vérifiez que RAX contient bien 42."
+    ],
+    "hints": [
+      "MOV RAX, 15 puis MOV RBX, 27.",
+      "ADD RAX, RBX additionne RBX à RAX."
+    ],
+    "solutionCode": "MOV RAX, 15\nMOV RBX, 27\nADD RAX, RBX",
+    "solutionExplanation": "RAX reçoit 15, RBX reçoit 27, puis ADD RAX, RBX calcule 15 + 27 = 42 et stocke le résultat dans RAX.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 42, "description": "RAX doit valoir 42 (15 + 27)."}
+    ]
+  },
+  {
+    "id": "project_02",
+    "number": 2,
+    "title": "Comparateur de nombres",
+    "objective": "Écrire un programme qui place 1 dans RAX si RBX est strictement plus grand que RCX, sinon 0.",
+    "explanation": "Ce projet met en pratique CMP et les sauts conditionnels du Module 6, en traduisant une comparaison en un résultat binaire dans un registre.",
+    "steps": [
+      "Placez 10 dans RBX et 4 dans RCX.",
+      "Comparez-les avec CMP.",
+      "Utilisez JG pour sauter vers un résultat de 1 si RBX est plus grand.",
+      "Sinon, laissez le résultat à 0."
+    ],
+    "hints": [
+      "CMP RBX, RCX met à jour les flags pour la comparaison RBX - RCX.",
+      "JG saute si le résultat est strictement positif (RBX > RCX)."
+    ],
+    "solutionCode": "MOV RBX, 10\nMOV RCX, 4\nMOV RAX, 0\nCMP RBX, RCX\nJG plus_grand\nJMP fin\nplus_grand:\nMOV RAX, 1\nfin:\nNOP",
+    "solutionExplanation": "RAX est initialisé à 0. Si CMP RBX, RCX montre que RBX est plus grand (JG), RAX passe à 1. Sinon, le programme saute directement à la fin sans modifier RAX.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 1, "description": "RAX doit valoir 1 car 10 > 4."}
+    ]
+  },
+  {
+    "id": "project_03",
+    "number": 3,
+    "title": "Compteur 1 → 10",
+    "objective": "Écrire une boucle qui compte de 1 à 10 et place la valeur finale du compteur dans RAX.",
+    "explanation": "Ce projet reprend la structure de boucle du Module 7, appliquée à un compteur croissant plutôt que décroissant.",
+    "steps": [
+      "Initialisez RAX à 0 et RCX à 10 (nombre d'itérations restantes).",
+      "À chaque tour, incrémentez RAX avec INC.",
+      "Décrémentez RCX et testez s'il reste des itérations.",
+      "Vérifiez que RAX atteint bien 10."
+    ],
+    "hints": [
+      "INC RAX augmente RAX de 1 à chaque tour.",
+      "La boucle se répète tant que RCX n'est pas encore à 0."
+    ],
+    "solutionCode": "MOV RAX, 0\nMOV RCX, 10\ncompter:\nINC RAX\nDEC RCX\nCMP RCX, 0\nJNE compter",
+    "solutionExplanation": "RAX est incrémenté une fois par tour de boucle, pendant que RCX sert de compteur d'itérations restantes : après 10 tours, RAX vaut 10 et RCX vaut 0.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 10, "description": "RAX doit valoir 10 après la boucle."}
+    ]
+  },
+  {
+    "id": "project_04",
+    "number": 4,
+    "title": "Calcul d'une somme",
+    "objective": "Calculer la somme des nombres pairs de 2 à 10 (2+4+6+8+10 = 30) dans RAX.",
+    "explanation": "Une variation du Module 7 : au lieu d'avancer de 1 en 1, le compteur avance de 2 en 2.",
+    "steps": [
+      "Initialisez RAX à 0 (somme) et RBX à 2 (compteur pair).",
+      "À chaque tour, ajoutez RBX à RAX.",
+      "Ajoutez 2 à RBX.",
+      "Répétez tant que RBX ne dépasse pas 10."
+    ],
+    "hints": [
+      "ADD RBX, 2 fait avancer le compteur de 2 en 2.",
+      "Comparez RBX à 12 (juste après 10) pour savoir quand arrêter."
+    ],
+    "solutionCode": "MOV RAX, 0\nMOV RBX, 2\nsomme:\nADD RAX, RBX\nADD RBX, 2\nCMP RBX, 12\nJNE somme",
+    "solutionExplanation": "RBX prend successivement les valeurs 2, 4, 6, 8, 10, chacune ajoutée à RAX, jusqu'à ce que RBX atteigne 12 (juste après 10), ce qui arrête la boucle. RAX vaut alors 2+4+6+8+10 = 30.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 30, "description": "RAX doit valoir 30 (somme des pairs de 2 à 10)."}
+    ]
+  },
+  {
+    "id": "project_05",
+    "number": 5,
+    "title": "Factorielle",
+    "objective": "Calculer 5! (factorielle de 5 = 120) dans RAX à l'aide d'une boucle.",
+    "explanation": "Ce projet combine boucle et multiplication (Modules 4 et 7) pour un calcul classique en programmation.",
+    "steps": [
+      "Initialisez RAX à 1 (élément neutre de la multiplication) et RCX à 5.",
+      "À chaque tour, multipliez RAX par RCX.",
+      "Décrémentez RCX.",
+      "Répétez jusqu'à ce que RCX atteigne 0."
+    ],
+    "hints": [
+      "MUL RCX multiplie RAX par RCX et stocke le résultat dans RAX.",
+      "N'oubliez pas de décrémenter RCX avant de comparer."
+    ],
+    "solutionCode": "MOV RAX, 1\nMOV RCX, 5\nfactorielle:\nMUL RCX\nDEC RCX\nCMP RCX, 0\nJNE factorielle",
+    "solutionExplanation": "RAX accumule le produit : 1×5=5, 5×4=20, 20×3=60, 60×2=120, puis RCX atteint 1×1=120 avant de tomber à 0, ce qui arrête la boucle. Résultat final : 120.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 120, "description": "RAX doit valoir 120 (5!)."}
+    ]
+  },
+  {
+    "id": "project_06",
+    "number": 6,
+    "title": "Manipulation d'un tableau",
+    "objective": "Stocker les valeurs 10, 20 et 30 à des adresses mémoire consécutives, puis en calculer la somme dans RAX.",
+    "explanation": "Ce projet illustre comment un tableau n'est, en mémoire, qu'une suite d'adresses consécutives (Module 8), lues via un décalage (offset) depuis une adresse de base.",
+    "steps": [
+      "Choisissez une adresse de base, par exemple 0x60.",
+      "Stockez 10, 20 et 30 aux adresses 0x60, 0x68 et 0x70 (des emplacements de 8 octets chacun).",
+      "Relisez chacune des trois valeurs et additionnez-les dans RAX."
+    ],
+    "hints": [
+      "Utilisez RBP comme registre de base : MOV RBP, 0x60.",
+      "Accédez aux éléments avec [RBP], [RBP+8] et [RBP+16]."
+    ],
+    "solutionCode": "MOV RBP, 0x60\nMOV [RBP], 10\nMOV [RBP+8], 20\nMOV [RBP+16], 30\nMOV RAX, [RBP]\nADD RAX, [RBP+8]\nADD RAX, [RBP+16]",
+    "solutionExplanation": "Les trois valeurs sont stockées à des adresses espacées de 8 octets (la taille d'un registre 64 bits), comme les cases d'un tableau. RAX additionne ensuite les trois valeurs relues : 10+20+30 = 60.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 60, "description": "RAX doit valoir 60 (10+20+30)."}
+    ]
+  },
+  {
+    "id": "project_07",
+    "number": 7,
+    "title": "Calculatrice simplifiée",
+    "objective": "Calculer (12 - 4) ÷ 2 et placer le résultat (4) dans RAX.",
+    "explanation": "Ce projet enchaîne plusieurs opérations arithmétiques du Module 4 (SUB puis DIV) dans un seul petit programme, comme une mini calculatrice.",
+    "steps": [
+      "Placez 12 dans RAX.",
+      "Soustrayez 4 avec SUB.",
+      "Divisez le résultat par 2 avec DIV."
+    ],
+    "hints": [
+      "DIV utilise RAX comme dividende implicite.",
+      "Le quotient de DIV est toujours stocké dans RAX."
+    ],
+    "solutionCode": "MOV RAX, 12\nMOV RBX, 4\nSUB RAX, RBX\nMOV RBX, 2\nDIV RBX",
+    "solutionExplanation": "12 - 4 = 8, puis 8 ÷ 2 = 4 (quotient dans RAX, reste 0 dans RDX).",
+    "checks": [
+      {"register": "RAX", "expectedValue": 4, "description": "RAX doit valoir 4."}
+    ]
+  },
+  {
+    "id": "project_08",
+    "number": 8,
+    "title": "Programme NASM pédagogique",
+    "objective": "Écrire, dans le style d'un vrai programme NASM, un calcul complet se terminant par HLT, comme le ferait un programme réel juste avant son appel système de sortie.",
+    "explanation": "Ce dernier projet fait le lien avec le Module 11 : un programme assembleur réel se termine toujours par une instruction de fin explicite. Ici, HLT joue ce rôle dans le simulateur pédagogique d'ASMForge.",
+    "steps": [
+      "Calculez 6 × 7 dans RAX à l'aide de MUL.",
+      "Stockez ce résultat en mémoire à l'adresse 0x30.",
+      "Terminez le programme avec HLT, comme le ferait un appel système de sortie dans un vrai programme NASM."
+    ],
+    "hints": [
+      "MOV [0x30], RAX écrit le contenu d'un registre en mémoire.",
+      "HLT doit être la dernière instruction exécutée."
+    ],
+    "solutionCode": "MOV RAX, 6\nMOV RBX, 7\nMUL RBX\nMOV [0x30], RAX\nHLT",
+    "solutionExplanation": "6 × 7 = 42, stocké dans RAX puis recopié en mémoire à l'adresse 0x30, avant l'arrêt explicite du programme avec HLT — une structure proche de celle d'un vrai programme NASM se terminant par un appel système exit.",
+    "checks": [
+      {"register": "RAX", "expectedValue": 42, "description": "RAX doit valoir 42 (6 × 7)."},
+      {"memoryAddress": 48, "expectedValue": 42, "description": "L'adresse 0x30 (48 en décimal) doit contenir 42."}
+    ]
+  }
+]

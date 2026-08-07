@@ -1,0 +1,285 @@
+[
+  {
+    "id": "ex_bin_1",
+    "moduleId": "module_1",
+    "lessonId": "m1_l2",
+    "type": "qcm",
+    "prompt": "Quelle est la valeur décimale du nombre binaire 1011 ?",
+    "concept": "Conversion binaire vers décimal",
+    "data": {
+      "options": ["9", "11", "13", "15"],
+      "correctIndex": 1,
+      "explanation": "1011 = 1×8 + 0×4 + 1×2 + 1×1 = 8 + 0 + 2 + 1 = 11."
+    }
+  },
+  {
+    "id": "ex_hex_1",
+    "moduleId": "module_1",
+    "lessonId": "m1_l3",
+    "type": "predictResult",
+    "prompt": "Convertissez 0x2A en décimal.",
+    "concept": "Conversion hexadécimale vers décimal",
+    "data": {
+      "code": "0x2A",
+      "question": "Quelle est la valeur décimale de 0x2A ?",
+      "correctAnswer": "42",
+      "explanation": "0x2A = 2×16 + 10 = 32 + 10 = 42. Le chiffre A vaut 10 en hexadécimal."
+    }
+  },
+  {
+    "id": "ex_signed_1",
+    "moduleId": "module_1",
+    "lessonId": "m1_l4",
+    "type": "qcm",
+    "prompt": "Sur 8 bits, que représente 11111111 en complément à deux (nombre signé) ?",
+    "concept": "Complément à deux",
+    "data": {
+      "options": ["255", "-1", "0", "-128"],
+      "correctIndex": 1,
+      "explanation": "En complément à deux, une suite de bits tous à 1 représente toujours -1, quelle que soit la largeur du registre."
+    }
+  },
+  {
+    "id": "ex_reg_1",
+    "moduleId": "module_3",
+    "lessonId": "m3_l2",
+    "type": "qcm",
+    "prompt": "Quel registre pointe vers le sommet de la pile ?",
+    "concept": "Registres pointeurs",
+    "data": {
+      "options": ["RAX", "RBP", "RSP", "RIP"],
+      "correctIndex": 2,
+      "explanation": "RSP (Stack Pointer) pointe toujours vers le sommet de la pile."
+    }
+  },
+  {
+    "id": "ex_mov_1",
+    "moduleId": "module_4",
+    "lessonId": "m4_l1",
+    "type": "predictResult",
+    "prompt": "Prédisez la valeur finale de RBX.",
+    "concept": "MOV",
+    "data": {
+      "code": "MOV RAX, 7\nMOV RBX, RAX",
+      "question": "Quelle est la valeur de RBX après ces deux lignes ?",
+      "correctAnswer": "7",
+      "explanation": "MOV RBX, RAX copie la valeur de RAX (7) dans RBX. RAX n'est pas modifié."
+    }
+  },
+  {
+    "id": "ex_add_1",
+    "moduleId": "module_4",
+    "lessonId": "m4_l2",
+    "type": "fillBlank",
+    "prompt": "Complétez l'instruction manquante pour que RAX vaille 8.",
+    "concept": "ADD",
+    "data": {
+      "template": "MOV RAX, 5\nMOV RBX, 3\n___ RAX, RBX",
+      "correctAnswer": "ADD",
+      "explanation": "ADD RAX, RBX additionne RBX à RAX : 5 + 3 = 8."
+    }
+  },
+  {
+    "id": "ex_incdec_1",
+    "moduleId": "module_4",
+    "lessonId": "m4_l3",
+    "type": "findError",
+    "prompt": "Ce code doit amener RCX à 0, mais contient une erreur. Laquelle ?",
+    "concept": "Boucle avec DEC",
+    "data": {
+      "code": "MOV RCX, 3\nboucle:\nCMP RCX, 0\nJE fin\nINC RCX\nJMP boucle\nfin:\nNOP",
+      "options": [
+        "Il faudrait utiliser DEC RCX au lieu de INC RCX : sinon RCX ne fait qu'augmenter et ne vaut jamais 0.",
+        "MOV RCX, 3 est invalide en assembleur.",
+        "CMP RCX, 0 devrait être CMP 0, RCX.",
+        "JE fin devrait être placé avant CMP RCX, 0."
+      ],
+      "correctIndex": 0,
+      "explanation": "INC RCX augmente RCX au lieu de le diminuer : la boucle ne se termine donc jamais (jusqu'à la limite de sécurité d'ASMForge). Il fallait écrire DEC RCX."
+    }
+  },
+  {
+    "id": "ex_muldiv_1",
+    "moduleId": "module_4",
+    "lessonId": "m4_l4",
+    "type": "writeProgram",
+    "prompt": "Écrivez un programme qui place le quotient de 20 divisé par 6 dans RAX, et le reste dans RDX.",
+    "concept": "DIV",
+    "data": {
+      "instructions": "Placez 20 dans RAX, 6 dans un autre registre, puis utilisez DIV pour obtenir le quotient dans RAX et le reste dans RDX.",
+      "starterCode": "; Écrivez votre solution ici\n",
+      "checks": [
+        {"register": "RAX", "expectedValue": 3, "description": "RAX doit contenir le quotient (3)."},
+        {"register": "RDX", "expectedValue": 2, "description": "RDX doit contenir le reste (2)."}
+      ],
+      "explanation": "20 = 6×3 + 2 : le quotient est 3, le reste est 2. Exemple de solution : MOV RAX, 20 / MOV RBX, 6 / DIV RBX."
+    }
+  },
+  {
+    "id": "ex_flags_1",
+    "moduleId": "module_5",
+    "lessonId": "m5_l1",
+    "type": "predictResult",
+    "prompt": "Le flag ZF sera-t-il activé après ce code ?",
+    "concept": "Zero Flag",
+    "data": {
+      "code": "MOV RAX, 4\nSUB RAX, 4",
+      "question": "Répondez par oui ou non.",
+      "correctAnswer": "oui",
+      "explanation": "4 - 4 = 0, donc ZF (Zero Flag) est activé car le résultat est nul."
+    }
+  },
+  {
+    "id": "ex_cmp_1",
+    "moduleId": "module_6",
+    "lessonId": "m6_l1",
+    "type": "qcm",
+    "prompt": "Que fait CMP RAX, RBX au juste ?",
+    "concept": "CMP",
+    "data": {
+      "options": [
+        "Elle copie RBX dans RAX.",
+        "Elle soustrait RBX de RAX et met à jour les flags, sans changer RAX.",
+        "Elle additionne RAX et RBX dans RAX.",
+        "Elle échange RAX et RBX."
+      ],
+      "correctIndex": 1,
+      "explanation": "CMP fonctionne comme SUB mais sans stocker le résultat : elle ne fait que mettre à jour les flags pour un futur saut conditionnel."
+    }
+  },
+  {
+    "id": "ex_jumps_1",
+    "moduleId": "module_6",
+    "lessonId": "m6_l2",
+    "type": "findError",
+    "prompt": "Ce code veut sauter à « egal » si RAX vaut 5, mais échoue toujours. Pourquoi ?",
+    "concept": "Sauts conditionnels",
+    "data": {
+      "code": "MOV RAX, 5\nJE egal\nMOV RBX, 0\nJMP fin\negal:\nMOV RBX, 1\nfin:\nNOP",
+      "options": [
+        "Il manque un CMP RAX, 5 avant JE : sans lui, les flags ne reflètent pas la comparaison souhaitée.",
+        "JE devrait être remplacé par JMP.",
+        "MOV RAX, 5 est une instruction invalide.",
+        "L'étiquette « fin » est interdite en assembleur."
+      ],
+      "correctIndex": 0,
+      "explanation": "JE se base sur le flag ZF, lui-même mis à jour par la dernière opération arithmétique ou par CMP. Sans CMP RAX, 5 juste avant, ZF reflète encore le résultat du MOV précédent (les instructions MOV ne modifient pas les flags)."
+    }
+  },
+  {
+    "id": "ex_loop_1",
+    "moduleId": "module_7",
+    "lessonId": "m7_l1",
+    "type": "reorder",
+    "prompt": "Remettez ces lignes dans l'ordre pour obtenir une boucle qui additionne 1 à RAX cinq fois.",
+    "concept": "Structure d'une boucle",
+    "data": {
+      "lines": [
+        "MOV RCX, 5",
+        "boucle:",
+        "ADD RAX, 1",
+        "DEC RCX",
+        "CMP RCX, 0",
+        "JNE boucle"
+      ],
+      "explanation": "On initialise le compteur avant la boucle, puis à chaque tour on effectue le travail (ADD), on décrémente le compteur, on compare, et on reboucle tant que le compteur n'est pas à 0."
+    }
+  },
+  {
+    "id": "ex_loop_2",
+    "moduleId": "module_7",
+    "lessonId": "m7_l1",
+    "type": "writeProgram",
+    "prompt": "Écrivez une boucle qui calcule la somme des nombres de 1 à 4 dans RAX (résultat attendu : 10).",
+    "concept": "Boucles et accumulateurs",
+    "data": {
+      "instructions": "Utilisez un registre comme compteur décroissant et un autre comme accumulateur.",
+      "starterCode": "; Écrivez votre boucle ici\nMOV RAX, 0\nMOV RCX, 4\n",
+      "checks": [
+        {"register": "RAX", "expectedValue": 10, "description": "RAX doit contenir la somme 1+2+3+4 = 10."}
+      ],
+      "explanation": "Exemple de solution : additionner RCX à RAX à chaque tour, puis décrémenter RCX, jusqu'à ce qu'il atteigne 0."
+    }
+  },
+  {
+    "id": "ex_mem_1",
+    "moduleId": "module_8",
+    "lessonId": "m8_l1",
+    "type": "writeProgram",
+    "prompt": "Écrivez un programme qui stocke la valeur 99 à l'adresse mémoire 0x20, puis la recopie dans RAX.",
+    "concept": "Lecture/écriture mémoire",
+    "data": {
+      "instructions": "Utilisez MOV avec une adresse entre crochets pour écrire en mémoire, puis pour la relire.",
+      "starterCode": "; Écrivez votre solution ici\n",
+      "checks": [
+        {"register": "RAX", "expectedValue": 99, "description": "RAX doit contenir 99, relu depuis la mémoire."}
+      ],
+      "explanation": "Exemple de solution : MOV [0x20], 99 puis MOV RAX, [0x20]."
+    }
+  },
+  {
+    "id": "ex_stack_1",
+    "moduleId": "module_9",
+    "lessonId": "m9_l1",
+    "type": "predictResult",
+    "prompt": "Prédisez la valeur finale de RBX.",
+    "concept": "PUSH / POP",
+    "data": {
+      "code": "MOV RAX, 10\nPUSH RAX\nMOV RAX, 20\nPUSH RAX\nPOP RBX",
+      "question": "Quelle est la valeur de RBX après ce code ?",
+      "correctAnswer": "20",
+      "explanation": "La pile fonctionne en dernier entré, premier sorti (LIFO) : le dernier PUSH (20) est donc la première valeur récupérée par POP."
+    }
+  },
+  {
+    "id": "ex_stack_2",
+    "moduleId": "module_9",
+    "lessonId": "m9_l1",
+    "type": "writeProgram",
+    "prompt": "Utilisez la pile pour échanger les valeurs de RAX et RBX (RAX doit finir à 2, RBX à 1).",
+    "concept": "Pile",
+    "data": {
+      "instructions": "Initialisez RAX à 1 et RBX à 2, puis utilisez PUSH/POP pour les échanger.",
+      "starterCode": "MOV RAX, 1\nMOV RBX, 2\n; Échangez-les avec la pile\n",
+      "checks": [
+        {"register": "RAX", "expectedValue": 2, "description": "RAX doit valoir 2 après l'échange."},
+        {"register": "RBX", "expectedValue": 1, "description": "RBX doit valoir 1 après l'échange."}
+      ],
+      "explanation": "Exemple de solution : PUSH RAX / PUSH RBX / POP RAX / POP RBX — la pile inverse l'ordre des deux valeurs."
+    }
+  },
+  {
+    "id": "ex_func_1",
+    "moduleId": "module_10",
+    "lessonId": "m10_l1",
+    "type": "writeProgram",
+    "prompt": "Écrivez une fonction « triple » appelée par CALL qui multiplie RAX par 3.",
+    "concept": "CALL / RET",
+    "data": {
+      "instructions": "Placez 4 dans RAX, appelez une fonction qui le multiplie par 3, puis arrêtez le programme avec HLT avant la définition de la fonction.",
+      "starterCode": "MOV RAX, 4\nCALL triple\nHLT\ntriple:\n; à compléter\n",
+      "checks": [
+        {"register": "RAX", "expectedValue": 12, "description": "RAX doit valoir 12 (4 × 3) après l'appel."}
+      ],
+      "explanation": "Exemple de solution pour la fonction : MOV RBX, 3 puis MUL RBX puis RET."
+    }
+  },
+  {
+    "id": "ex_func_2",
+    "moduleId": "module_10",
+    "lessonId": "m10_l2",
+    "type": "qcm",
+    "prompt": "À quoi sert RET dans une fonction assembleur ?",
+    "concept": "Conventions d'appel",
+    "data": {
+      "options": [
+        "À réinitialiser tous les registres.",
+        "À dépiler l'adresse de retour empilée par CALL et à y retourner.",
+        "À empiler les paramètres de la fonction.",
+        "À arrêter définitivement le programme."
+      ],
+      "correctIndex": 1,
+      "explanation": "RET dépile l'adresse que CALL avait automatiquement empilée, et y fait sauter le processeur : c'est ce qui permet de revenir juste après le CALL d'origine."
+    }
+  }
+]
