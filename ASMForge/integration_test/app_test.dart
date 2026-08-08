@@ -42,7 +42,7 @@ void main() {
     expect(find.text('ASMForge'), findsWidgets);
 
     // Navigation réelle vers le Laboratoire.
-    await tester.tap(find.text('Laboratoire').first);
+    await tester.tap(find.text('Labo').first);
     await tester.pumpAndSettle();
     expect(find.text('Run'), findsOneWidget);
     expect(find.text('Step'), findsOneWidget);
@@ -95,5 +95,84 @@ void main() {
       '8',
       reason: 'Après le troisième Step (ADD RAX, RBX), RAX doit valoir 8.',
     );
+
+    // PAYSAGE : bascule l'orientation simulée et vérifie l'absence de
+    // débordement (RenderFlex overflow) sur le Laboratoire, qui empile
+    // éditeur + panneaux dans un seul défilement en largeur étroite.
+    final originalSize = tester.view.physicalSize;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    tester.view.physicalSize = Size(originalSize.height, originalSize.width);
+    await tester.pumpAndSettle();
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'Aucun débordement ne doit apparaître sur le Laboratoire en paysage.',
+    );
+
+    // Retour en portrait avant de continuer la navigation.
+    tester.view.physicalSize = originalSize;
+    await tester.pumpAndSettle();
+
+    // Navigation vers le Profil : vérifie que Statistiques s'affiche sans
+    // débordement, y compris avec le libellé le plus long (« Temps
+    // d'apprentissage »).
+    await tester.tap(find.text('Profil').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Statistiques'), findsOneWidget);
+    expect(find.text('Temps d\'apprentissage'), findsOneWidget);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'Aucun débordement ne doit apparaître dans Profil > Statistiques.',
+    );
+
+    // Rejoue aussi le paysage sur le Profil, pour la même raison.
+    tester.view.physicalSize = Size(originalSize.height, originalSize.width);
+    await tester.pumpAndSettle();
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'Aucun débordement ne doit apparaître dans Profil en paysage.',
+    );
+    tester.view.physicalSize = originalSize;
+    await tester.pumpAndSettle();
+
+    // Paramètres : vérifie le SegmentedButton Guidé/Standard/Expert, qui
+    // ne rétrécit jamais ses segments en dessous de leur largeur
+    // naturelle et peut déborder sur un écran étroit. Le lien est en bas
+    // de la liste du Profil : on la fait défiler à partir d'un point de
+    // l'écran plutôt que d'un widget (plusieurs Scrollable coexistent
+    // dans l'arbre car les onglets restent montés, ce qui rend les
+    // finders par widget ambigus ou instables après défilement).
+    final screenCenter = Offset(
+      originalSize.width / tester.view.devicePixelRatio / 2,
+      originalSize.height / tester.view.devicePixelRatio / 2,
+    );
+    for (var i = 0; i < 6 && find.text('Paramètres').evaluate().isEmpty; i++) {
+      await tester.dragFrom(screenCenter, const Offset(0, -300));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('Paramètres'), findsOneWidget);
+    await tester.tap(find.text('Paramètres'));
+    await tester.pumpAndSettle();
+    expect(find.text('Standard'), findsOneWidget);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'Aucun débordement ne doit apparaître dans Paramètres (niveau d\'assistance).',
+    );
+
+    tester.view.physicalSize = Size(originalSize.height, originalSize.width);
+    await tester.pumpAndSettle();
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'Aucun débordement ne doit apparaître dans Paramètres en paysage.',
+    );
+    tester.view.physicalSize = originalSize;
+    await tester.pumpAndSettle();
   });
 }

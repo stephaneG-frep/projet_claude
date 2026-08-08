@@ -68,13 +68,15 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 16),
           Text('Statistiques', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 10),
-          GridView.count(
-            crossAxisCount: 2,
+          GridView(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 2.4,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 92,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+            ),
             children: [
               _StatCard(label: 'Temps d\'apprentissage', value: _formatDuration(progress.totalLearningSeconds)),
               _StatCard(label: 'Cours terminés', value: '${progress.completedModules.length}'),
@@ -147,9 +149,21 @@ class _StatCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(value, style: Theme.of(context).textTheme.titleLarge),
-            Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleLarge,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),

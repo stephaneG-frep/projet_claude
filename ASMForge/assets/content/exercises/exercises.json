@@ -281,5 +281,356 @@
       "correctIndex": 1,
       "explanation": "RET dépile l'adresse que CALL avait automatiquement empilée, et y fait sauter le processeur : c'est ce qui permet de revenir juste après le CALL d'origine."
     }
+  },
+  {
+    "id": "ex_m0_l1",
+    "moduleId": "module_0",
+    "lessonId": "m0_l1",
+    "type": "qcm",
+    "prompt": "Quel composant exécute réellement les instructions d'un programme ?",
+    "concept": "CPU",
+    "data": {
+      "options": ["Le CPU", "La RAM", "Le disque dur", "L'écran"],
+      "correctIndex": 0,
+      "explanation": "Le CPU (processeur) est le seul composant qui exécute les instructions ; les autres stockent ou affichent des données."
+    }
+  },
+  {
+    "id": "ex_m0_l2",
+    "moduleId": "module_0",
+    "lessonId": "m0_l2",
+    "type": "qcm",
+    "prompt": "Que doit-il se passer si le CPU a besoin d'une donnée qui se trouve sur le disque dur ?",
+    "concept": "RAM et stockage",
+    "data": {
+      "options": [
+        "Le CPU la lit directement depuis le disque.",
+        "Elle doit d'abord être chargée en RAM.",
+        "Le CPU l'ignore.",
+        "Elle est automatiquement supprimée."
+      ],
+      "correctIndex": 1,
+      "explanation": "Le CPU ne peut calculer que sur des données présentes en RAM (ou dans ses registres) : les données du disque doivent d'abord y être chargées."
+    }
+  },
+  {
+    "id": "ex_m0_l3",
+    "moduleId": "module_0",
+    "lessonId": "m0_l3",
+    "type": "qcm",
+    "prompt": "Pourquoi utilise-t-on l'assembleur plutôt que d'écrire directement en langage machine ?",
+    "concept": "Langage machine et assembleur",
+    "data": {
+      "options": [
+        "Parce que le CPU ne comprend pas le binaire.",
+        "Parce que l'assembleur est lisible pour un humain tout en restant proche du matériel.",
+        "Parce que l'assembleur s'exécute plus vite que le binaire.",
+        "Parce que le binaire n'existe plus aujourd'hui."
+      ],
+      "correctIndex": 1,
+      "explanation": "Le CPU ne comprend que le binaire, mais l'assembleur donne un nom lisible à chaque instruction machine, ce qui le rend compréhensible pour un humain."
+    }
+  },
+  {
+    "id": "ex_m0_l4",
+    "moduleId": "module_0",
+    "lessonId": "m0_l4",
+    "type": "qcm",
+    "prompt": "Quel outil assemble plusieurs fichiers compilés séparément en un seul programme exécutable ?",
+    "concept": "Compilateur, assembleur et linker",
+    "data": {
+      "options": ["Le compilateur", "L'assembleur (l'outil)", "Le linker", "Le simulateur"],
+      "correctIndex": 2,
+      "explanation": "Le linker (éditeur de liens) assemble un ou plusieurs fichiers déjà compilés/assemblés en un seul exécutable final."
+    }
+  },
+  {
+    "id": "ex_m2_l1",
+    "moduleId": "module_2",
+    "lessonId": "m2_l1",
+    "type": "qcm",
+    "prompt": "Quel composant du CPU effectue réellement les calculs arithmétiques ?",
+    "concept": "ALU",
+    "data": {
+      "options": ["L'unité de contrôle", "L'ALU", "Le bus", "Le registre RIP"],
+      "correctIndex": 1,
+      "explanation": "L'ALU (Arithmetic Logic Unit) est le composant chargé des calculs arithmétiques et logiques ; l'unité de contrôle se contente de coordonner."
+    }
+  },
+  {
+    "id": "ex_m2_l2",
+    "moduleId": "module_2",
+    "lessonId": "m2_l2",
+    "type": "qcm",
+    "prompt": "Que contient le registre RIP à un instant donné ?",
+    "concept": "Instruction Pointer",
+    "data": {
+      "options": [
+        "Le résultat du dernier calcul.",
+        "L'adresse de la prochaine instruction à exécuter.",
+        "La valeur actuelle de RAX.",
+        "Le nombre total d'instructions déjà exécutées."
+      ],
+      "correctIndex": 1,
+      "explanation": "RIP (Instruction Pointer) pointe toujours vers la prochaine instruction que le processeur va exécuter."
+    }
+  },
+  {
+    "id": "ex_m2_l3",
+    "moduleId": "module_2",
+    "lessonId": "m2_l3",
+    "type": "reorder",
+    "prompt": "Remettez les trois étapes du cycle du processeur dans le bon ordre.",
+    "concept": "Cycle Fetch / Decode / Execute",
+    "data": {
+      "lines": [
+        "Fetch : lire l'instruction à l'adresse pointée par RIP",
+        "Decode : déterminer l'opération et ses opérandes",
+        "Execute : réaliser l'opération dans l'ALU (ou ailleurs)"
+      ],
+      "explanation": "Le processeur lit d'abord l'instruction (Fetch), comprend ensuite ce qu'elle demande (Decode), puis l'exécute réellement (Execute), en boucle continue."
+    }
+  },
+  {
+    "id": "ex_m3_l1",
+    "moduleId": "module_3",
+    "lessonId": "m3_l1",
+    "type": "qcm",
+    "prompt": "Quel registre général est traditionnellement utilisé comme compteur dans une boucle ?",
+    "concept": "Registres généraux",
+    "data": {
+      "options": ["RAX", "RBX", "RCX", "RDX"],
+      "correctIndex": 2,
+      "explanation": "RCX (registre compteur) est historiquement le registre privilégié pour compter les itérations d'une boucle."
+    }
+  },
+  {
+    "id": "ex_m8_l2",
+    "moduleId": "module_8",
+    "lessonId": "m8_l2",
+    "type": "predictResult",
+    "prompt": "Prédisez la valeur finale de RAX.",
+    "concept": "Pointeurs et offsets",
+    "data": {
+      "code": "MOV RBP, 100\nMOV [RBP+8], 5\nMOV RAX, [RBP+8]",
+      "question": "Quelle est la valeur de RAX après ce code ?",
+      "correctAnswer": "5",
+      "explanation": "[RBP+8] désigne l'adresse 108 (100+8) : on y écrit 5, puis on relit exactement cette même adresse dans RAX."
+    }
+  },
+  {
+    "id": "ex_m9_l2",
+    "moduleId": "module_9",
+    "lessonId": "m9_l2",
+    "type": "qcm",
+    "prompt": "Pendant l'exécution d'une fonction, quel registre sert de repère fixe pour retrouver ses variables locales ?",
+    "concept": "Stack frame",
+    "data": {
+      "options": ["RAX", "RBP", "RDI", "RIP"],
+      "correctIndex": 1,
+      "explanation": "RBP (Base Pointer) reste fixe pendant l'exécution d'une fonction, servant de repère pour accéder aux variables locales via des décalages, pendant que RSP continue de bouger."
+    }
+  },
+  {
+    "id": "ex_m11_l2",
+    "moduleId": "module_11",
+    "lessonId": "m11_l2",
+    "type": "qcm",
+    "prompt": "Quel outil résout les adresses manquantes et assemble les fichiers objets en un exécutable ?",
+    "concept": "Assemblage et linking",
+    "data": {
+      "options": ["nasm", "ld (le linker)", "gcc", "Le Laboratoire ASMForge"],
+      "correctIndex": 1,
+      "explanation": "nasm produit des fichiers objets ; c'est le linker (ld) qui résout les adresses manquantes et produit l'exécutable final."
+    }
+  },
+  {
+    "id": "ex_m11_l3",
+    "moduleId": "module_11",
+    "lessonId": "m11_l3",
+    "type": "qcm",
+    "prompt": "Sur Linux x86-64, où place-t-on le numéro de l'appel système avant SYSCALL ?",
+    "concept": "Appels système",
+    "data": {
+      "options": ["Dans RAX", "Dans RSP", "Dans RIP", "Dans les flags"],
+      "correctIndex": 0,
+      "explanation": "Le numéro de l'appel système demandé se place dans RAX ; ses arguments vont dans RDI, RSI, RDX, R10, R8, R9."
+    }
+  },
+  {
+    "id": "ex_m11_l4",
+    "moduleId": "module_11",
+    "lessonId": "m11_l4",
+    "type": "qcm",
+    "prompt": "Que fait `longueur equ $ - message` dans le programme NASM complet de la leçon ?",
+    "concept": "Directives NASM",
+    "data": {
+      "options": [
+        "Elle définit une boucle.",
+        "Elle calcule automatiquement la longueur du texte à l'assemblage.",
+        "Elle exécute un appel système.",
+        "Elle déclare une nouvelle section."
+      ],
+      "correctIndex": 1,
+      "explanation": "`$` représente l'adresse courante à l'assemblage ; `$ - message` calcule donc automatiquement le nombre d'octets du texte `message`."
+    }
+  },
+  {
+    "id": "ex_m12_l2",
+    "moduleId": "module_12",
+    "lessonId": "m12_l2",
+    "type": "qcm",
+    "prompt": "Comment appelle-t-on la séquence PUSH RBP / MOV RBP, RSP placée au début d'une fonction ?",
+    "concept": "Prologue de fonction",
+    "data": {
+      "options": ["L'épilogue", "Le prologue", "Un appel système", "Le linker"],
+      "correctIndex": 1,
+      "explanation": "Cette séquence initiale s'appelle le prologue ; la séquence symétrique en fin de fonction (POP RBP avant RET) s'appelle l'épilogue."
+    }
+  },
+  {
+    "id": "ex_m12_l3",
+    "moduleId": "module_12",
+    "lessonId": "m12_l3",
+    "type": "qcm",
+    "prompt": "Une fois compilée, une boucle for du C repose principalement sur quelles instructions assembleur ?",
+    "concept": "Boucles compilées",
+    "data": {
+      "options": ["PUSH et POP", "CMP et un saut conditionnel (Jcc)", "MUL et DIV", "CALL et RET"],
+      "correctIndex": 1,
+      "explanation": "Une boucle for/while se compile toujours en une comparaison (CMP) suivie d'un saut conditionnel qui décide de continuer ou non la boucle."
+    }
+  },
+  {
+    "id": "ex_m13_l2",
+    "moduleId": "module_13",
+    "lessonId": "m13_l2",
+    "type": "qcm",
+    "prompt": "Quelle instruction ARM64 faut-il utiliser avant de pouvoir traiter une valeur qui se trouve en mémoire ?",
+    "concept": "LDR / STR",
+    "data": {
+      "options": ["MOV", "LDR (chargement explicite)", "CMP", "RET"],
+      "correctIndex": 1,
+      "explanation": "Contrairement à x86-64, ARM64 ne peut pas lire la mémoire directement dans une instruction arithmétique : il faut d'abord charger la valeur avec LDR."
+    }
+  },
+  {
+    "id": "ex_m13_l3",
+    "moduleId": "module_13",
+    "lessonId": "m13_l3",
+    "type": "qcm",
+    "prompt": "Quelle affirmation décrit correctement une différence entre x86-64 et ARM64 ?",
+    "concept": "x86-64 vs ARM64",
+    "data": {
+      "options": [
+        "x86-64 est RISC et ARM64 est CISC.",
+        "ARM64 nécessite LDR/STR pour accéder à la mémoire, alors que x86-64 peut le faire directement dans une instruction arithmétique.",
+        "Les deux architectures utilisent exactement les mêmes noms de registres.",
+        "ARM64 n'a pas de pile."
+      ],
+      "correctIndex": 1,
+      "explanation": "x86-64 (CISC) autorise des instructions comme ADD RAX, [RBP-8] qui lisent la mémoire directement ; ARM64 (RISC) impose de charger d'abord la valeur avec LDR."
+    }
+  },
+  {
+    "id": "ex_m14_l2",
+    "moduleId": "module_14",
+    "lessonId": "m14_l2",
+    "type": "qcm",
+    "prompt": "Quelle est la particularité du registre x0 en RISC-V ?",
+    "concept": "Registres RISC-V",
+    "data": {
+      "options": [
+        "Il contient l'adresse de retour.",
+        "Il est toujours égal à 0, quoi qu'on y écrive.",
+        "Il pointe vers le sommet de la pile.",
+        "Il contient le prochain opcode à décoder."
+      ],
+      "correctIndex": 1,
+      "explanation": "x0 est câblé matériellement à la valeur 0 en permanence : y écrire n'a aucun effet, ce qui est pratique pour de nombreuses instructions."
+    }
+  },
+  {
+    "id": "ex_m14_l3",
+    "moduleId": "module_14",
+    "lessonId": "m14_l3",
+    "type": "qcm",
+    "prompt": "Quelle architecture n'a pas de registre de flags et compare directement deux registres dans l'instruction de branchement elle-même ?",
+    "concept": "Comparaison des architectures",
+    "data": {
+      "options": ["x86-64", "ARM64", "RISC-V", "Aucune des trois"],
+      "correctIndex": 2,
+      "explanation": "RISC-V n'a pas de registre de flags : des instructions comme BEQ ou BLT comparent directement deux registres en une seule étape, sans CMP préalable."
+    }
+  },
+  {
+    "id": "ex_m1_l1",
+    "moduleId": "module_1",
+    "lessonId": "m1_l1",
+    "type": "qcm",
+    "prompt": "Combien de valeurs différentes un octet (8 bits) peut-il représenter ?",
+    "concept": "Bits et octets",
+    "data": {
+      "options": ["8", "16", "256", "1024"],
+      "correctIndex": 2,
+      "explanation": "8 bits offrent 2^8 = 256 combinaisons possibles, donc 256 valeurs différentes (de 0 à 255)."
+    }
+  },
+  {
+    "id": "ex_m11_l1",
+    "moduleId": "module_11",
+    "lessonId": "m11_l1",
+    "type": "qcm",
+    "prompt": "Quelle section d'un programme NASM contient le code exécutable ?",
+    "concept": "Sections NASM",
+    "data": {
+      "options": [".data", ".bss", ".text", ".code"],
+      "correctIndex": 2,
+      "explanation": "La section .text contient les instructions du programme ; .data et .bss contiennent des données, initialisées ou non."
+    }
+  },
+  {
+    "id": "ex_m12_l1",
+    "moduleId": "module_12",
+    "lessonId": "m12_l1",
+    "type": "qcm",
+    "prompt": "Que produit un compilateur C avant de générer le code machine final ?",
+    "concept": "Compilation C",
+    "data": {
+      "options": ["Du code assembleur", "Une page HTML", "Un fichier JSON", "Une base de données"],
+      "correctIndex": 0,
+      "explanation": "Un compilateur C traduit d'abord le code source en assembleur, avant que celui-ci ne soit converti en code machine."
+    }
+  },
+  {
+    "id": "ex_m13_l1",
+    "moduleId": "module_13",
+    "lessonId": "m13_l1",
+    "type": "qcm",
+    "prompt": "Quel type d'architecture est ARM64 ?",
+    "concept": "Introduction ARM64",
+    "data": {
+      "options": ["CISC", "RISC", "Aucune des deux", "Une architecture quantique"],
+      "correctIndex": 1,
+      "explanation": "ARM64 est une architecture RISC (Reduced Instruction Set Computer) : des instructions simples et uniformes."
+    }
+  },
+  {
+    "id": "ex_m14_l1",
+    "moduleId": "module_14",
+    "lessonId": "m14_l1",
+    "type": "qcm",
+    "prompt": "Qu'est-ce qui distingue principalement RISC-V des architectures comme x86-64 et ARM64 ?",
+    "concept": "Introduction RISC-V",
+    "data": {
+      "options": [
+        "C'est la seule architecture 64 bits.",
+        "C'est une spécification ouverte, libre de droits.",
+        "Elle n'a pas de registres.",
+        "Elle ne peut pas effectuer d'additions."
+      ],
+      "correctIndex": 1,
+      "explanation": "Contrairement à x86-64 (Intel/AMD) et ARM64 (Arm Ltd.), RISC-V est une spécification ouverte que n'importe qui peut implémenter librement."
+    }
   }
 ]

@@ -67,12 +67,14 @@ class _MemoryViewerState extends State<MemoryViewer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              runSpacing: 8,
               children: [
-                Expanded(
-                  child: Text('Mémoire', style: Theme.of(context).textTheme.titleMedium),
-                ),
+                Text('Mémoire', style: Theme.of(context).textTheme.titleMedium),
                 SegmentedButton<MemoryBase>(
+                  showSelectedIcon: false,
                   segments: const [
                     ButtonSegment(value: MemoryBase.hex, label: Text('HEX')),
                     ButtonSegment(value: MemoryBase.dec, label: Text('DEC')),

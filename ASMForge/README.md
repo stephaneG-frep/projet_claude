@@ -91,7 +91,7 @@ android/ web/ linux/ windows/   Projets de plateforme générés par Flutter
 - Le simulateur est un **interpréteur pédagogique isolé** : il n'assemble ni n'exécute de code machine natif, n'effectue aucun appel système (`SYSCALL` n'est pas simulé) et n'accède ni au système de fichiers, ni au réseau (voir [docs/SIMULATOR.md](docs/SIMULATOR.md)).
 - `MUL`/`DIV` simplifient le comportement réel x86-64 (pas de véritable paire `RDX:RAX` à 128 bits) : voir la Référence dans l'application et `docs/SIMULATOR.md` pour le détail exact.
 - Sur le Web, les entiers Dart perdent leur précision native 64 bits au-delà de 2^53 (limite de la plateforme JavaScript, pas du simulateur lui-même).
-- Les modules 11 à 14 (NASM/Linux, C et assembleur, ARM64, RISC-V) sont des introductions comparatives, pas des simulateurs complets pour ces architectures.
+- Les modules 11 à 14 (NASM/Linux, C et assembleur, ARM64, RISC-V) couvrent chacun plusieurs leçons rédigées (structure, assemblage/linking, appels système, correspondance C, comparaisons d'architectures…), mais restent du contenu de culture générale comparative : le simulateur du Laboratoire n'exécute que le sous-ensemble x86-64 listé dans la Référence, pas ces architectures elles-mêmes.
 - L'export/import de données utilise le presse-papiers plutôt qu'un sélecteur de fichiers natif, afin de rester fiable de façon identique sur Android, Web, Linux et Windows sans configuration spécifique par plateforme.
 - Le build Linux desktop nécessite des paquets système (`clang`, `cmake`, `ninja-build`, `pkg-config`, `libgtk-3-dev`) qui peuvent ne pas être installés par défaut. Le build Windows ne peut être produit que sur une machine Windows.
 

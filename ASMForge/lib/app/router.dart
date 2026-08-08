@@ -22,7 +22,7 @@ final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 const _shellDestinations = [
   ShellDestination(label: 'Accueil', icon: Icons.home_outlined, selectedIcon: Icons.home),
   ShellDestination(label: 'Apprendre', icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book),
-  ShellDestination(label: 'Laboratoire', icon: Icons.science_outlined, selectedIcon: Icons.science),
+  ShellDestination(label: 'Labo', icon: Icons.science_outlined, selectedIcon: Icons.science),
   ShellDestination(label: 'Missions', icon: Icons.flag_outlined, selectedIcon: Icons.flag),
   ShellDestination(label: 'Profil', icon: Icons.person_outline, selectedIcon: Icons.person),
 ];

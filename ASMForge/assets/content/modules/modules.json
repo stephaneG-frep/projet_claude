@@ -383,7 +383,7 @@
     "id": "module_11",
     "number": 11,
     "title": "NASM et Linux",
-    "description": "Structure d'un vrai programme NASM (introduction).",
+    "description": "Structure, assemblage et exécution d'un vrai programme NASM.",
     "lessons": [
       {
         "id": "m11_l1",
@@ -394,6 +394,45 @@
           {"type": "code", "text": "section .data\nmessage db \"Bonjour\", 0\n\nsection .text\nglobal _start\n_start:\nMOV RAX, 60      ; appel système exit\nMOV RDI, 0\nSYSCALL"},
           {"type": "warning", "text": "Limitation pédagogique importante : ASMForge est un interpréteur isolé qui ne produit pas de vrai binaire et n'exécute aucun appel système réel (SYSCALL n'est pas simulé). Cette leçon présente la structure NASM à titre de culture générale ; le Laboratoire se concentre sur le sous-ensemble d'instructions exécutables listées dans la Référence."},
           {"type": "tip", "text": "Pour assembler et exécuter réellement ce type de programme sur une machine Linux, on utiliserait les outils `nasm` puis `ld`, en dehors d'ASMForge."}
+        ]
+      },
+      {
+        "id": "m11_l2",
+        "order": 2,
+        "title": "Assemblage et linking",
+        "blocks": [
+          {"type": "paragraph", "text": "Transformer un fichier .asm en programme exécutable se fait en deux étapes distinctes, réalisées par deux outils différents."},
+          {"type": "bullet", "text": "L'assembleur (l'outil `nasm`) traduit le texte assembleur en code machine, produisant un fichier objet (.o) : les instructions sont converties en octets, mais les adresses de certains symboles externes restent à compléter."},
+          {"type": "bullet", "text": "Le linker (l'outil `ld`) résout ces adresses manquantes, assemble un ou plusieurs fichiers objets ensemble, et produit le programme exécutable final."},
+          {"type": "code", "text": "nasm -f elf64 programme.asm -o programme.o\nld programme.o -o programme\n./programme"},
+          {"type": "tip", "text": "C'est exactement la même logique en C : le compilateur produit des fichiers objets à partir de chaque fichier .c, puis le linker les assemble avec les bibliothèques utilisées en un seul exécutable."},
+          {"type": "warning", "text": "ASMForge ne reproduit pas cette chaîne d'outils : le Laboratoire interprète directement le texte assembleur en mémoire, sans jamais produire de fichier objet ni d'exécutable réel."}
+        ]
+      },
+      {
+        "id": "m11_l3",
+        "order": 3,
+        "title": "Appels système sur Linux x86-64",
+        "blocks": [
+          {"type": "paragraph", "text": "Un appel système (syscall) est la façon dont un programme demande un service au système d'exploitation : lire un fichier, écrire à l'écran, se terminer, allouer de la mémoire… Sur Linux x86-64, cela se fait avec l'instruction SYSCALL."},
+          {"type": "paragraph", "text": "Le numéro de l'appel système demandé est placé dans RAX, et ses arguments dans RDI, RSI, RDX, R10, R8, R9 dans cet ordre. Le résultat revient dans RAX."},
+          {"type": "code", "text": "; Écrire \"Bonjour\\n\" (7 caractères) sur la sortie standard (fd 1)\nMOV RAX, 1        ; numéro de syscall : write\nMOV RDI, 1        ; premier argument : descripteur de fichier (stdout)\nMOV RSI, message  ; deuxième argument : adresse du texte\nMOV RDX, 7        ; troisième argument : longueur du texte\nSYSCALL\n\n; Terminer le programme proprement\nMOV RAX, 60       ; numéro de syscall : exit\nMOV RDI, 0        ; code de sortie\nSYSCALL"},
+          {"type": "bullet", "text": "write (1) : écrit des octets vers un descripteur de fichier."},
+          {"type": "bullet", "text": "read (0) : lit des octets depuis un descripteur de fichier."},
+          {"type": "bullet", "text": "exit (60) : termine le programme avec un code de sortie."},
+          {"type": "warning", "text": "SYSCALL n'est pas une instruction supportée par le simulateur d'ASMForge (section 39 : aucun accès réel au système d'exploitation n'est permis). Cette leçon reste théorique ; utilisez un vrai environnement Linux avec `nasm`/`ld` pour l'exécuter réellement."}
+        ]
+      },
+      {
+        "id": "m11_l4",
+        "order": 4,
+        "title": "Exemple complet commenté",
+        "blocks": [
+          {"type": "paragraph", "text": "Voici un programme NASM complet et fonctionnel (sur une vraie machine Linux x86-64), qui affiche « Bonjour » puis se termine proprement. Chaque ligne est commentée."},
+          {"type": "code", "text": "section .data\nmessage db \"Bonjour\", 10   ; le texte, suivi d'un retour à la ligne (10)\nlongueur equ $ - message   ; calcule automatiquement la longueur du texte\n\nsection .text\nglobal _start\n\n_start:\n    MOV RAX, 1          ; syscall write\n    MOV RDI, 1          ; vers stdout\n    MOV RSI, message    ; adresse du texte\n    MOV RDX, longueur   ; longueur calculée\n    SYSCALL\n\n    MOV RAX, 60         ; syscall exit\n    MOV RDI, 0          ; code de sortie 0 (succès)\n    SYSCALL"},
+          {"type": "bullet", "text": "`db` (define byte) déclare une suite d'octets, ici les caractères du texte."},
+          {"type": "bullet", "text": "`equ` définit une constante calculée à l'assemblage ; `$` représente l'adresse courante, donc `$ - message` donne la longueur exacte du texte."},
+          {"type": "tip", "text": "Retrouvez dans ce programme les notions déjà vues : sections (Leçon 1), assemblage/linking (Leçon 2) et appels système (Leçon 3) — c'est la synthèse de tout le module."}
         ]
       }
     ]
@@ -412,6 +451,30 @@
           {"type": "paragraph", "text": "Un compilateur C transforme votre code source en assembleur, puis en langage machine. Une simple addition en C se retrouve avec une structure très proche de ce que vous avez appris dans ASMForge."},
           {"type": "code", "text": "// En C :\nint a = 5;\nint b = 3;\nint c = a + b;\n\n; Équivalent conceptuel en assembleur :\nMOV RAX, 5\nMOV RBX, 3\nADD RAX, RBX     ; RAX contient c"},
           {"type": "tip", "text": "Les boucles for/while en C se compilent en une structure CMP + Jcc très proche de celle du Module 7."}
+        ]
+      },
+      {
+        "id": "m12_l2",
+        "order": 2,
+        "title": "Variables locales et la pile en C compilé",
+        "blocks": [
+          {"type": "paragraph", "text": "Quand une fonction C déclare des variables locales, le compilateur leur réserve de la place directement sur la pile, dans la stack frame de la fonction (voir Module 9 et 10)."},
+          {"type": "code", "text": "// En C :\nvoid calculer() {\n    int x = 10;\n    int y = 20;\n    int somme = x + y;\n}\n\n; Équivalent conceptuel en assembleur :\nPUSH RBP           ; sauvegarde l'ancienne base de pile\nMOV RBP, RSP       ; nouvelle base de pile pour cette fonction\n; x est conceptuellement à [RBP-8], y à [RBP-16], somme à [RBP-24]\nMOV [RBP-8], 10    ; x = 10\nMOV [RBP-16], 20   ; y = 20\nMOV RAX, [RBP-8]\nADD RAX, [RBP-16]\nMOV [RBP-24], RAX  ; somme = x + y\nPOP RBP            ; restaure la base de pile de l'appelant"},
+          {"type": "bullet", "text": "PUSH RBP / MOV RBP, RSP au début d'une fonction s'appelle le « prologue »."},
+          {"type": "bullet", "text": "POP RBP juste avant RET s'appelle l'« épilogue »."},
+          {"type": "tip", "text": "Vous pouvez reproduire ce schéma dans le Laboratoire : essayez de stocker plusieurs variables locales à des décalages négatifs depuis RBP, exactement comme le ferait un compilateur C."}
+        ]
+      },
+      {
+        "id": "m12_l3",
+        "order": 3,
+        "title": "Boucles et conditions en C compilé",
+        "blocks": [
+          {"type": "paragraph", "text": "Les structures de contrôle du C (if/else, for, while) n'existent plus une fois compilées : elles deviennent uniquement des comparaisons (CMP) et des sauts conditionnels (Jcc), exactement comme au Module 6 et 7."},
+          {"type": "code", "text": "// En C :\nfor (int i = 0; i < 5; i++) {\n    total += i;\n}\n\n; Équivalent conceptuel en assembleur :\nMOV RCX, 0          ; i = 0\nMOV RAX, 0          ; total = 0\nboucle:\nCMP RCX, 5          ; i < 5 ?\nJGE fin_boucle       ; si non (i >= 5), sortir\nADD RAX, RCX        ; total += i\nINC RCX             ; i++\nJMP boucle\nfin_boucle:\nNOP"},
+          {"type": "paragraph", "text": "Un `if/else` se compile de façon similaire : une comparaison suivie d'un saut conditionnel qui évite le bloc « then » ou le bloc « else » selon le résultat."},
+          {"type": "code", "text": "// En C :\nif (a > b) {\n    max = a;\n} else {\n    max = b;\n}\n\n; Équivalent conceptuel en assembleur :\nCMP RAX, RBX        ; compare a (RAX) et b (RBX)\nJG a_plus_grand\nMOV RCX, RBX        ; max = b\nJMP fin_si\na_plus_grand:\nMOV RCX, RAX        ; max = a\nfin_si:\nNOP"},
+          {"type": "tip", "text": "C'est exactement la structure que vous avez déjà écrite au Projet 2 (Comparateur de nombres) : un compilateur C ne fait rien de magique, il applique les mêmes règles que vous."}
         ]
       }
     ]
@@ -433,6 +496,33 @@
           {"type": "code", "text": "; Équivalent conceptuel ARM64 de MOV RAX, 5 / ADD RAX, RBX :\nMOV X0, #5\nADD X0, X0, X1"},
           {"type": "warning", "text": "Limitation pédagogique : le simulateur d'ASMForge n'exécute que le sous-ensemble x86-64 présenté dans la Référence. Cette leçon reste une introduction comparative, pas un second simulateur."}
         ]
+      },
+      {
+        "id": "m13_l2",
+        "order": 2,
+        "title": "Registres et instructions ARM64",
+        "blocks": [
+          {"type": "paragraph", "text": "ARM64 définit 31 registres généraux (X0 à X30), plus quelques registres à rôle spécial très proches de ce que vous connaissez déjà de x86-64."},
+          {"type": "bullet", "text": "SP (Stack Pointer) : équivalent de RSP, pointe vers le sommet de la pile."},
+          {"type": "bullet", "text": "LR (Link Register, alias X30) : stocke l'adresse de retour d'une fonction — à la place d'empiler automatiquement comme le fait CALL en x86-64, ARM64 la range directement dans ce registre."},
+          {"type": "bullet", "text": "PC (Program Counter) : équivalent de RIP, pointe vers l'instruction courante."},
+          {"type": "code", "text": "; Charger et stocker (obligatoire pour accéder à la mémoire) :\nLDR X0, [X1]        ; charge la valeur à l'adresse contenue dans X1\nSTR X0, [X1]        ; stocke X0 à l'adresse contenue dans X1\n\n; Appel de fonction :\nBL ma_fonction       ; Branch with Link : saute et range l'adresse de retour dans LR\n; ... dans ma_fonction ...\nRET                  ; retourne à l'adresse contenue dans LR\n\n; Comparaison et saut conditionnel :\nCMP X0, X1\nB.EQ egal            ; saute si X0 == X1 (équivalent de JE)"},
+          {"type": "tip", "text": "Le principe reste identique à x86-64 : comparer puis sauter conditionnellement. Seule la syntaxe change (B.EQ au lieu de JE, B.GT au lieu de JG, etc.)."}
+        ]
+      },
+      {
+        "id": "m13_l3",
+        "order": 3,
+        "title": "Différences x86-64 vs ARM64",
+        "blocks": [
+          {"type": "paragraph", "text": "Comparaison des points essentiels entre les deux architectures :"},
+          {"type": "bullet", "text": "Philosophie : x86-64 est CISC (instructions riches, pouvant combiner calcul et accès mémoire en une seule instruction, comme ADD RAX, [RBP-8]) ; ARM64 est RISC (instructions simples, l'accès mémoire passe obligatoirement par LDR/STR séparés)."},
+          {"type": "bullet", "text": "Registres : 6 registres généraux « historiques » nommés (RAX, RBX…) en x86-64, contre 31 registres numérotés (X0-X30) en ARM64."},
+          {"type": "bullet", "text": "Retour de fonction : x86-64 empile l'adresse de retour sur la pile (CALL/RET) ; ARM64 la range dans un registre dédié, LR (BL/RET)."},
+          {"type": "bullet", "text": "Flags : x86-64 a ZF/CF/SF/OF ; ARM64 a un registre de condition équivalent avec les bits N (négatif), Z (zéro), C (carry), V (overflow) — les mêmes idées, des noms différents."},
+          {"type": "bullet", "text": "Usage : x86-64 domine les PC et serveurs classiques ; ARM64 domine le mobile et gagne du terrain sur desktop (Apple Silicon) et serveur (efficacité énergétique)."},
+          {"type": "tip", "text": "Malgré ces différences de syntaxe et de philosophie, le raisonnement appris dans ASMForge — registres, flags, pile, sauts conditionnels, fonctions — se transporte directement d'une architecture à l'autre."}
+        ]
       }
     ]
   },
@@ -452,6 +542,35 @@
           {"type": "bullet", "text": "Instructions typiques : ADD, SUB, ADDI (addition avec une valeur immédiate), BEQ (branchement si égal)."},
           {"type": "code", "text": "; Équivalent conceptuel RISC-V de MOV RAX, 5 / ADD RAX, RBX :\naddi x1, x0, 5\nadd  x1, x1, x2"},
           {"type": "paragraph", "text": "Comparé à x86-64 (CISC, instructions denses et variées) et ARM64 (RISC mobile), RISC-V mise sur une spécification minimale et extensible, pensée pour être implémentée aussi bien sur un micro-contrôleur que sur un serveur."}
+        ]
+      },
+      {
+        "id": "m14_l2",
+        "order": 2,
+        "title": "Registres et jeu d'instructions RISC-V",
+        "blocks": [
+          {"type": "paragraph", "text": "RISC-V définit 32 registres généraux (x0 à x31), avec des noms d'usage conventionnels qui rappellent leur rôle habituel, un peu comme RAX/RBX en x86-64."},
+          {"type": "bullet", "text": "x0 (zero) : câblé en permanence à la valeur 0, quoi qu'on y écrive."},
+          {"type": "bullet", "text": "ra (x1, Return Address) : équivalent de LR en ARM64 ou de l'adresse de retour empilée par CALL en x86-64."},
+          {"type": "bullet", "text": "sp (x2, Stack Pointer) : équivalent de RSP."},
+          {"type": "bullet", "text": "a0-a7 (x10-x17, Arguments) : registres conventionnellement utilisés pour passer les arguments d'une fonction et sa valeur de retour."},
+          {"type": "code", "text": "; Chargement/écriture mémoire (comme LDR/STR en ARM64) :\nlw   a0, 0(sp)       ; charge un mot (load word) depuis l'adresse sp+0\nsw   a0, 0(sp)       ; stocke un mot (store word) à l'adresse sp+0\n\n; Appel de fonction :\njal  ra, ma_fonction  ; Jump And Link : saute et range l'adresse de retour dans ra\n; ... dans ma_fonction ...\njalr x0, ra, 0        ; retourne à l'adresse contenue dans ra\n\n; Comparaison et saut conditionnel (pas de flags séparés !) :\nbeq  a0, a1, egal     ; saute vers « egal » si a0 == a1\nblt  a0, a1, plus_petit ; saute si a0 < a1"},
+          {"type": "warning", "text": "Différence notable : RISC-V n'a pas de registre de flags (pas de ZF/CF/SF/OF ni d'équivalent NZCV) ! Les branchements comme BEQ/BLT comparent directement deux registres, sans étape CMP séparée au préalable."}
+        ]
+      },
+      {
+        "id": "m14_l3",
+        "order": 3,
+        "title": "Comparaison x86 / ARM / RISC-V",
+        "blocks": [
+          {"type": "paragraph", "text": "Un même besoin — comparer deux valeurs et sauter si elles sont égales — s'exprime différemment selon l'architecture :"},
+          {"type": "code", "text": "; x86-64 (ASMForge) :\nCMP RAX, RBX\nJE egal\n\n; ARM64 :\nCMP X0, X1\nB.EQ egal\n\n; RISC-V :\nbeq a0, a1, egal"},
+          {"type": "bullet", "text": "x86-64 : flags persistants mis à jour par CMP (et par la plupart des instructions arithmétiques), lus ensuite par un saut conditionnel séparé."},
+          {"type": "bullet", "text": "ARM64 : même principe que x86-64, avec un registre de condition (N/Z/C/V) au lieu de flags nommés individuellement."},
+          {"type": "bullet", "text": "RISC-V : pas de flags du tout — chaque instruction de branchement conditionnel compare directement deux registres en une seule étape."},
+          {"type": "bullet", "text": "Nombre de registres généraux : 6 (x86-64, historique) contre 31 (ARM64) contre 31 (RISC-V, x1 à x31 utilisables, x0 étant câblé à zéro)."},
+          {"type": "bullet", "text": "Licence : x86-64 et ARM64 sont des architectures propriétaires (Intel/AMD, Arm Ltd.) ; RISC-V est une spécification ouverte, libre d'implémentation par quiconque."},
+          {"type": "tip", "text": "Ces trois architectures résolvent les mêmes problèmes fondamentaux (calculer, comparer, sauter, appeler des fonctions, gérer la mémoire) : c'est exactement ce que vous avez appris avec ASMForge, seule la syntaxe change d'une architecture à l'autre."}
         ]
       }
     ]

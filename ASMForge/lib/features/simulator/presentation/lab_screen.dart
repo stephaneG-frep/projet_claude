@@ -81,7 +81,6 @@ class _LabScreenState extends ConsumerState<LabScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth >= 900;
-          final editorColumn = _buildEditorColumn(labState);
           final panelColumn = SingleChildScrollView(
             padding: const EdgeInsets.all(12),
             child: Column(children: panels),
@@ -90,15 +89,21 @@ class _LabScreenState extends ConsumerState<LabScreen> {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(flex: 3, child: editorColumn),
+                Expanded(flex: 3, child: _buildEditorColumn(labState, useFixedHeights: false)),
                 SizedBox(width: 380, child: panelColumn),
               ],
             );
           }
+          // Mode mobile/tablette étroite : tout est empilé dans un seul
+          // défilement, avec des hauteurs fixes plutôt que des Expanded
+          // contraints par une boîte de taille arbitraire. Cela reste
+          // correct quelle que soit l'orientation (portrait ou paysage),
+          // y compris sur un écran bas où l'espace vertical disponible
+          // est réduit : le contenu défile au lieu de déborder.
           return SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 420, child: editorColumn),
+                _buildEditorColumn(labState, useFixedHeights: true),
                 panelColumn,
               ],
             ),
@@ -108,11 +113,45 @@ class _LabScreenState extends ConsumerState<LabScreen> {
     );
   }
 
-  Widget _buildEditorColumn(LabState labState) {
+  Widget _buildEditorColumn(LabState labState, {required bool useFixedHeights}) {
+    final editor = AsmCodeEditor(
+      controller: _controller,
+      highlightedLine: labState.currentLine,
+      breakpoints: labState.breakpoints,
+      onToggleBreakpoint: (line) =>
+          ref.read(labControllerProvider.notifier).toggleBreakpoint(line),
+    );
+    final console = Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSecondary,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: labState.consoleLines.isEmpty
+          ? const Text(
+              'Appuyez sur Run ou Step pour exécuter le programme.',
+              style: TextStyle(color: AppColors.textSecondary),
+            )
+          : ListView.builder(
+              shrinkWrap: useFixedHeights,
+              physics: useFixedHeights ? const NeverScrollableScrollPhysics() : null,
+              itemCount: labState.consoleLines.length,
+              itemBuilder: (context, i) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Text(
+                  labState.consoleLines[i],
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
+                ),
+              ),
+            ),
+    );
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: useFixedHeights ? MainAxisSize.min : MainAxisSize.max,
         children: [
           _ControlBar(),
           const SizedBox(height: 10),
@@ -139,45 +178,11 @@ class _LabScreenState extends ConsumerState<LabScreen> {
             ),
             const SizedBox(height: 10),
           ],
-          Expanded(
-            flex: 3,
-            child: AsmCodeEditor(
-              controller: _controller,
-              highlightedLine: labState.currentLine,
-              breakpoints: labState.breakpoints,
-              onToggleBreakpoint: (line) =>
-                  ref.read(labControllerProvider.notifier).toggleBreakpoint(line),
-            ),
-          ),
+          useFixedHeights ? SizedBox(height: 300, child: editor) : Expanded(flex: 3, child: editor),
           const SizedBox(height: 10),
           Text('Console d\'exécution', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 6),
-          Expanded(
-            flex: 2,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceSecondary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: labState.consoleLines.isEmpty
-                  ? const Text(
-                      'Appuyez sur Run ou Step pour exécuter le programme.',
-                      style: TextStyle(color: AppColors.textSecondary),
-                    )
-                  : ListView.builder(
-                      itemCount: labState.consoleLines.length,
-                      itemBuilder: (context, i) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Text(
-                          labState.consoleLines[i],
-                          style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
-                        ),
-                      ),
-                    ),
-            ),
-          ),
+          useFixedHeights ? SizedBox(height: 160, child: console) : Expanded(flex: 2, child: console),
         ],
       ),
     );

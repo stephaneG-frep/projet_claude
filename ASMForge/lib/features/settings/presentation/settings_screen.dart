@@ -69,14 +69,22 @@ class SettingsScreen extends ConsumerWidget {
           const _SectionHeader('Niveau d\'assistance'),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SegmentedButton<AssistanceLevel>(
-              segments: const [
-                ButtonSegment(value: AssistanceLevel.guided, label: Text('Guidé')),
-                ButtonSegment(value: AssistanceLevel.standard, label: Text('Standard')),
-                ButtonSegment(value: AssistanceLevel.expert, label: Text('Expert')),
-              ],
-              selected: {settings.assistanceLevel},
-              onSelectionChanged: (s) => notifier.setAssistanceLevel(s.first),
+            // Enveloppé dans un défilement horizontal de sécurité : un
+            // SegmentedButton ne rétrécit jamais ses segments en dessous
+            // de leur largeur naturelle, et peut déborder sur un écran
+            // étroit ou avec une grande taille de texte d'accessibilité.
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: SegmentedButton<AssistanceLevel>(
+                showSelectedIcon: false,
+                segments: const [
+                  ButtonSegment(value: AssistanceLevel.guided, label: Text('Guidé')),
+                  ButtonSegment(value: AssistanceLevel.standard, label: Text('Standard')),
+                  ButtonSegment(value: AssistanceLevel.expert, label: Text('Expert')),
+                ],
+                selected: {settings.assistanceLevel},
+                onSelectionChanged: (s) => notifier.setAssistanceLevel(s.first),
+              ),
             ),
           ),
           const _SectionHeader('Données'),
